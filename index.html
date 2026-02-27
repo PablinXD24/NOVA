@@ -74,7 +74,7 @@
             align-items: center;
             justify-content: center;
             position: relative;
-            padding: 100px 20px;
+            padding: 100px 0;
         }
 
         .logo-container img { width: 450px; height: auto; filter: drop-shadow(0 0 20px rgba(255,255,255,0.1)); }
@@ -89,22 +89,23 @@
             50% { transform: scale(1.3) rotate(90deg); opacity: 1; filter: drop-shadow(0 0 15px #fff); }
         }
 
-        /* --- CARROSSEL AUTO-SCROLL --- */
+        /* --- CARROSSEL COM TRANSPARÊNCIA GRADUAL NAS BORDAS --- */
         .carousel-wrapper {
             width: 100%;
-            max-width: 1400px;
             overflow: hidden;
             position: relative;
+            /* Máscara de transparência nas pontas */
+            -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+            mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
         }
 
         .carousel-container { 
             display: flex; 
             gap: 25px; 
             overflow-x: auto; 
-            padding: 40px 20px; 
+            padding: 40px 10vw; /* Padding lateral para o gradiente respirar */
             scrollbar-width: none;
             user-select: none;
-            scroll-snap-type: none; /* Desativado para arraste manual fluido */
         }
         .carousel-container::-webkit-scrollbar { display: none; }
 
@@ -126,7 +127,6 @@
             flex-shrink: 0;
         }
 
-        /* Efeito de Brilho Dinâmico */
         .log-card::after {
             content: "";
             position: absolute;
@@ -146,18 +146,18 @@
         .log-card:hover { transform: scale(1.03); border-color: rgba(255, 255, 255, 0.4); }
         .log-card:hover::after { opacity: 0.4; }
 
-        /* Conteúdo do Card */
         .card-header { display: flex; justify-content: space-between; font-size: 0.7rem; letter-spacing: 1px; text-transform: uppercase; opacity: 0.6; margin-bottom: 20px; }
         .card-fase { font-weight: 700; color: var(--card-glow); }
         .log-card h2 { font-size: 1.4rem; font-weight: 400; margin-bottom: 15px; }
         .log-card p { font-size: 0.9rem; line-height: 1.6; color: rgba(255,255,255,0.6); flex-grow: 1; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; }
         .card-footer { margin-top: 20px; font-size: 0.75rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px; opacity: 0.5; }
 
-        /* --- MODAL E SEÇÕES SIMPLES --- */
+        /* --- MODAL --- */
         #modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); z-index: 2000; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; }
         .modal-content { background: var(--glass-bg); backdrop-filter: blur(50px) saturate(200%); border: 1.5px solid var(--glass-border); padding: 40px; border-radius: 32px; max-width: 600px; width: 90%; transform: scale(0.9); transition: transform 0.3s ease; }
         #modal-overlay.active { display: flex; opacity: 1; }
         #modal-overlay.active .modal-content { transform: scale(1); }
+
         .glass-card-simple { background: var(--glass-bg); backdrop-filter: blur(45px) saturate(210%); border: 1.5px solid var(--glass-border); border-radius: 28px; padding: 50px; max-width: 550px; text-align: center; }
     </style>
 </head>
@@ -207,48 +207,33 @@
             <div class="carousel-wrapper">
                 <div class="carousel-container" id="carousel">
                     <div class="log-card card-1" onclick="openModal(this)">
-                        <div class="card-header">
-                            <span>27 Fev</span>
-                            <span class="card-fase">Fase 01</span>
-                        </div>
+                        <div class="card-header"><span>27 Fev</span><span class="card-fase">Fase 01</span></div>
                         <h2>Estrutura Base</h2>
-                        <p>Desenvolvimento da arquitetura inicial utilizando Liquid Glass reforçado e sistema de cores atmosféricas.</p>
+                        <p>Desenvolvimento inicial com Liquid Glass e gradientes atmosféricos.</p>
                         <div class="card-footer">Autor: Pablo</div>
                     </div>
                     <div class="log-card card-2" onclick="openModal(this)">
-                        <div class="card-header">
-                            <span>01 Mar</span>
-                            <span class="card-fase">Fase 02</span>
-                        </div>
+                        <div class="card-header"><span>01 Mar</span><span class="card-fase">Fase 02</span></div>
                         <h2>Navegação</h2>
-                        <p>Implementação do sistema de abas estáticas e cursor customizado com a estrela de quatro pontas.</p>
+                        <p>Implementação do sistema de abas e cursor customizado.</p>
                         <div class="card-footer">Autor: Pablo</div>
                     </div>
                     <div class="log-card card-3" onclick="openModal(this)">
-                        <div class="card-header">
-                            <span>05 Mar</span>
-                            <span class="card-fase">Fase 03</span>
-                        </div>
+                        <div class="card-header"><span>05 Mar</span><span class="card-fase">Fase 03</span></div>
                         <h2>Dinâmica</h2>
-                        <p>Criação do carrossel infinito e integração dos campos de dados para o diário de bordo.</p>
+                        <p>Carrossel infinito com arraste manual e auto-scroll.</p>
                         <div class="card-footer">Autor: Pablo</div>
                     </div>
                     <div class="log-card card-4" onclick="openModal(this)">
-                        <div class="card-header">
-                            <span>10 Mar</span>
-                            <span class="card-fase">Fase 04</span>
-                        </div>
+                        <div class="card-header"><span>10 Mar</span><span class="card-fase">Fase 04</span></div>
                         <h2>Glow System</h2>
-                        <p>Refinamento dos efeitos de iluminação e profundidade dos cards baseados na paleta oficial.</p>
+                        <p>Efeitos de iluminação profunda baseados na paleta cromática.</p>
                         <div class="card-footer">Autor: Pablo</div>
                     </div>
                     <div class="log-card card-5" onclick="openModal(this)">
-                        <div class="card-header">
-                            <span>15 Mar</span>
-                            <span class="card-fase">Fase 05</span>
-                        </div>
+                        <div class="card-header"><span>15 Mar</span><span class="card-fase">Fase 05</span></div>
                         <h2>Finalização</h2>
-                        <p>Revisão de performance e ajustes finais de design para lançamento da interface.</p>
+                        <p>Ajustes de performance e refinamento da transparência gradual.</p>
                         <div class="card-footer">Autor: Pablo</div>
                     </div>
                 </div>
@@ -275,13 +260,11 @@
         let scrollLeft;
         let autoScrollActive = true;
 
-        // Cursor
         document.addEventListener('mousemove', (e) => {
             cursor.style.left = e.clientX + 'px';
             cursor.style.top = e.clientY + 'px';
         });
 
-        // Carrossel: Movimento Automático Lento
         function autoScroll() {
             if (autoScrollActive) {
                 carousel.scrollLeft += 1;
@@ -290,18 +273,18 @@
                 }
             }
         }
-        let scrollInterval = setInterval(autoScroll, 30);
+        setInterval(autoScroll, 30);
 
         carousel.addEventListener('mouseenter', () => autoScrollActive = false);
         carousel.addEventListener('mouseleave', () => autoScrollActive = true);
 
-        // Carrossel: Arrastar
         carousel.addEventListener('mousedown', (e) => {
             isDown = true;
             startX = e.pageX - carousel.offsetLeft;
             scrollLeft = carousel.scrollLeft;
         });
         carousel.addEventListener('mouseup', () => isDown = false);
+        carousel.addEventListener('mouseleave', () => isDown = false);
         carousel.addEventListener('mousemove', (e) => {
             if (!isDown) return;
             e.preventDefault();
@@ -310,7 +293,6 @@
             carousel.scrollLeft = scrollLeft - walk;
         });
 
-        // Modal
         function openModal(card) {
             document.getElementById('modal-title').innerText = card.querySelector('h2').innerText;
             document.getElementById('modal-text').innerText = card.querySelector('p').innerText;
