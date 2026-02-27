@@ -10,7 +10,6 @@
             --glass-border: rgba(255, 255, 255, 0.18);
             --glass-highlight: rgba(255, 255, 255, 0.08);
             --accent-color: #ffffff;
-            /* Paleta Original */
             --color-1: #2C5067;
             --color-2: #3BA6A6;
             --color-3: #50BF58;
@@ -33,7 +32,7 @@
             overflow-x: hidden;
         }
 
-        /* --- SIDEBAR ESTÁTICA NO TOPO --- */
+        /* --- SIDEBAR ESTÁTICA --- */
         .top-sidebar {
             position: absolute;
             top: 30px;
@@ -52,12 +51,7 @@
             text-decoration: none;
         }
 
-        .nav-star {
-            width: 24px;
-            height: 24px;
-            transition: transform 0.3s ease;
-        }
-
+        .nav-star { width: 24px; height: 24px; transition: transform 0.3s ease; }
         .nav-item:hover .nav-star { transform: scale(1.4) rotate(90deg); }
         .nav-label { position: absolute; top: 35px; font-size: 0.6rem; letter-spacing: 2px; text-transform: uppercase; opacity: 0; white-space: nowrap; transition: opacity 0.3s ease; pointer-events: none; color: #fff; }
         .nav-item:hover .nav-label { opacity: 1; }
@@ -72,7 +66,6 @@
 
         #bg-container { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: -1; background-color: #000; }
 
-        /* --- SEÇÕES --- */
         section {
             min-height: 100vh;
             width: 100%;
@@ -84,11 +77,7 @@
             padding: 100px 20px;
         }
 
-        .logo-container img { 
-            width: 450px; 
-            height: auto;
-            filter: drop-shadow(0 0 20px rgba(255,255,255,0.1)); 
-        }
+        .logo-container img { width: 450px; height: auto; filter: drop-shadow(0 0 20px rgba(255,255,255,0.1)); }
 
         .scroll-star-static {
             width: 35px; height: 35px; fill: var(--accent-color);
@@ -100,30 +89,44 @@
             50% { transform: scale(1.3) rotate(90deg); opacity: 1; filter: drop-shadow(0 0 15px #fff); }
         }
 
-        /* --- CARROSSEL COM EFEITO DE LUZ --- */
+        /* --- CARROSSEL AUTO-SCROLL --- */
+        .carousel-wrapper {
+            width: 100%;
+            max-width: 1400px;
+            overflow: hidden;
+            position: relative;
+        }
+
         .carousel-container { 
-            width: 100%; 
-            max-width: 1200px; 
             display: flex; 
             gap: 25px; 
             overflow-x: auto; 
             padding: 40px 20px; 
-            scroll-snap-type: x mandatory; 
-            scrollbar-width: none; 
+            scrollbar-width: none;
+            user-select: none;
+            scroll-snap-type: none; /* Desativado para arraste manual fluido */
         }
         .carousel-container::-webkit-scrollbar { display: none; }
 
         .log-card {
-            min-width: 320px; height: 420px; background: var(--glass-bg);
-            backdrop-filter: blur(45px) saturate(210%); -webkit-backdrop-filter: blur(45px) saturate(210%);
-            border: 1.5px solid var(--glass-border); border-radius: 28px; padding: 35px;
-            display: flex; flex-direction: column; justify-content: space-between;
-            scroll-snap-align: center; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            min-width: 320px; 
+            max-width: 320px;
+            height: 450px; 
+            background: var(--glass-bg);
+            backdrop-filter: blur(45px) saturate(210%);
+            -webkit-backdrop-filter: blur(45px) saturate(210%);
+            border: 1.5px solid var(--glass-border); 
+            border-radius: 28px; 
+            padding: 30px;
+            display: flex; 
+            flex-direction: column; 
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
+            flex-shrink: 0;
         }
 
-        /* Efeito de Brilho e Luz (Glow) baseado nas cores da sidebar */
+        /* Efeito de Brilho Dinâmico */
         .log-card::after {
             content: "";
             position: absolute;
@@ -134,31 +137,28 @@
             transition: opacity 0.4s ease;
         }
 
-        .log-card:hover::after { opacity: 0.3; }
-
-        /* Atribuição de cores específicas para o brilho dos cards */
         .card-1 { --card-glow: var(--color-1); box-shadow: 0 10px 30px rgba(44, 80, 103, 0.2); }
         .card-2 { --card-glow: var(--color-2); box-shadow: 0 10px 30px rgba(59, 166, 166, 0.2); }
         .card-3 { --card-glow: var(--color-3); box-shadow: 0 10px 30px rgba(80, 191, 88, 0.2); }
         .card-4 { --card-glow: var(--color-4); box-shadow: 0 10px 30px rgba(242, 202, 82, 0.2); }
         .card-5 { --card-glow: var(--color-5); box-shadow: 0 10px 30px rgba(242, 56, 57, 0.2); }
 
-        .log-card:hover { transform: scale(1.03) translateY(-5px); border-color: rgba(255, 255, 255, 0.4); }
-        .log-date { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; opacity: 0.5; }
-        .log-card h2 { font-size: 1.6rem; font-weight: 400; margin: 15px 0; }
-        .log-card p { font-size: 0.95rem; line-height: 1.6; color: rgba(255,255,255,0.6); display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+        .log-card:hover { transform: scale(1.03); border-color: rgba(255, 255, 255, 0.4); }
+        .log-card:hover::after { opacity: 0.4; }
 
-        /* --- MODAL --- */
+        /* Conteúdo do Card */
+        .card-header { display: flex; justify-content: space-between; font-size: 0.7rem; letter-spacing: 1px; text-transform: uppercase; opacity: 0.6; margin-bottom: 20px; }
+        .card-fase { font-weight: 700; color: var(--card-glow); }
+        .log-card h2 { font-size: 1.4rem; font-weight: 400; margin-bottom: 15px; }
+        .log-card p { font-size: 0.9rem; line-height: 1.6; color: rgba(255,255,255,0.6); flex-grow: 1; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; }
+        .card-footer { margin-top: 20px; font-size: 0.75rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px; opacity: 0.5; }
+
+        /* --- MODAL E SEÇÕES SIMPLES --- */
         #modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); z-index: 2000; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; }
         .modal-content { background: var(--glass-bg); backdrop-filter: blur(50px) saturate(200%); border: 1.5px solid var(--glass-border); padding: 40px; border-radius: 32px; max-width: 600px; width: 90%; transform: scale(0.9); transition: transform 0.3s ease; }
         #modal-overlay.active { display: flex; opacity: 1; }
         #modal-overlay.active .modal-content { transform: scale(1); }
-
-        .glass-card-simple {
-            background: var(--glass-bg); backdrop-filter: blur(45px) saturate(210%);
-            border: 1.5px solid var(--glass-border); border-radius: 28px; padding: 50px;
-            max-width: 550px; text-align: center;
-        }
+        .glass-card-simple { background: var(--glass-bg); backdrop-filter: blur(45px) saturate(210%); border: 1.5px solid var(--glass-border); border-radius: 28px; padding: 50px; max-width: 550px; text-align: center; }
     </style>
 </head>
 <body>
@@ -204,60 +204,121 @@
 
         <section id="diario">
             <h2 style="margin-bottom: 30px; font-weight: 200; letter-spacing: 5px;">DIÁRIO DE BORDO</h2>
-            <div class="carousel-container">
-                <div class="log-card card-1" onclick="openModal(this)">
-                    <span class="log-date">Fase 01</span>
-                    <div><h2>Efeito Aurora</h2><p>Este card possui um brilho suave inspirado na primeira estrela da sidebar.</p></div>
-                </div>
-                <div class="log-card card-2" onclick="openModal(this)">
-                    <span class="log-date">Fase 02</span>
-                    <div><h2>Luz Oceânica</h2><p>O efeito Liquid Glass agora reage com tons ciano e turquesa.</p></div>
-                </div>
-                <div class="log-card card-3" onclick="openModal(this)">
-                    <span class="log-date">Fase 03</span>
-                    <div><h2>Vibração Natural</h2><p>Brilho verde esmeralda aplicado para profundidade visual.</p></div>
+            <div class="carousel-wrapper">
+                <div class="carousel-container" id="carousel">
+                    <div class="log-card card-1" onclick="openModal(this)">
+                        <div class="card-header">
+                            <span>27 Fev</span>
+                            <span class="card-fase">Fase 01</span>
+                        </div>
+                        <h2>Estrutura Base</h2>
+                        <p>Desenvolvimento da arquitetura inicial utilizando Liquid Glass reforçado e sistema de cores atmosféricas.</p>
+                        <div class="card-footer">Autor: Pablo</div>
+                    </div>
+                    <div class="log-card card-2" onclick="openModal(this)">
+                        <div class="card-header">
+                            <span>01 Mar</span>
+                            <span class="card-fase">Fase 02</span>
+                        </div>
+                        <h2>Navegação</h2>
+                        <p>Implementação do sistema de abas estáticas e cursor customizado com a estrela de quatro pontas.</p>
+                        <div class="card-footer">Autor: Pablo</div>
+                    </div>
+                    <div class="log-card card-3" onclick="openModal(this)">
+                        <div class="card-header">
+                            <span>05 Mar</span>
+                            <span class="card-fase">Fase 03</span>
+                        </div>
+                        <h2>Dinâmica</h2>
+                        <p>Criação do carrossel infinito e integração dos campos de dados para o diário de bordo.</p>
+                        <div class="card-footer">Autor: Pablo</div>
+                    </div>
+                    <div class="log-card card-4" onclick="openModal(this)">
+                        <div class="card-header">
+                            <span>10 Mar</span>
+                            <span class="card-fase">Fase 04</span>
+                        </div>
+                        <h2>Glow System</h2>
+                        <p>Refinamento dos efeitos de iluminação e profundidade dos cards baseados na paleta oficial.</p>
+                        <div class="card-footer">Autor: Pablo</div>
+                    </div>
+                    <div class="log-card card-5" onclick="openModal(this)">
+                        <div class="card-header">
+                            <span>15 Mar</span>
+                            <span class="card-fase">Fase 05</span>
+                        </div>
+                        <h2>Finalização</h2>
+                        <p>Revisão de performance e ajustes finais de design para lançamento da interface.</p>
+                        <div class="card-footer">Autor: Pablo</div>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <section id="projetos">
-            <div class="glass-card-simple"><h2>PROJETOS</h2><p>Interface e experimentação.</p></div>
-        </section>
-
-        <section id="sobre">
-            <div class="glass-card-simple"><h2>SOBRE</h2><p>Performance e design imersivo.</p></div>
-        </section>
-
-        <section id="contato">
-            <div class="glass-card-simple"><h2>CONTATO</h2><p>Criações digitais modernas.</p></div>
-        </section>
+        <section id="projetos"><div class="glass-card-simple"><h2>PROJETOS</h2><p>Interface e experimentação.</p></div></section>
+        <section id="sobre"><div class="glass-card-simple"><h2>SOBRE</h2><p>Design imersivo focado em detalhes.</p></div></section>
+        <section id="contato"><div class="glass-card-simple"><h2>CONTATO</h2><p>Criações digitais modernas.</p></div></section>
     </div>
 
     <div id="modal-overlay" onclick="closeModal()">
         <div class="modal-content" onclick="event.stopPropagation()">
-            <span id="modal-date" class="log-date"></span>
-            <h2 id="modal-title" style="margin: 20px 0; font-weight: 400;"></h2>
+            <h2 id="modal-title" style="margin-bottom: 20px;"></h2>
             <p id="modal-text" style="color: rgba(255,255,255,0.7); line-height: 1.8;"></p>
         </div>
     </div>
 
     <script>
         const cursor = document.getElementById('custom-cursor');
+        const carousel = document.getElementById('carousel');
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+        let autoScrollActive = true;
+
+        // Cursor
         document.addEventListener('mousemove', (e) => {
             cursor.style.left = e.clientX + 'px';
             cursor.style.top = e.clientY + 'px';
         });
 
-        const overlay = document.getElementById('modal-overlay');
+        // Carrossel: Movimento Automático Lento
+        function autoScroll() {
+            if (autoScrollActive) {
+                carousel.scrollLeft += 1;
+                if (carousel.scrollLeft >= (carousel.scrollWidth - carousel.clientWidth)) {
+                    carousel.scrollLeft = 0;
+                }
+            }
+        }
+        let scrollInterval = setInterval(autoScroll, 30);
+
+        carousel.addEventListener('mouseenter', () => autoScrollActive = false);
+        carousel.addEventListener('mouseleave', () => autoScrollActive = true);
+
+        // Carrossel: Arrastar
+        carousel.addEventListener('mousedown', (e) => {
+            isDown = true;
+            startX = e.pageX - carousel.offsetLeft;
+            scrollLeft = carousel.scrollLeft;
+        });
+        carousel.addEventListener('mouseup', () => isDown = false);
+        carousel.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - carousel.offsetLeft;
+            const walk = (x - startX) * 2;
+            carousel.scrollLeft = scrollLeft - walk;
+        });
+
+        // Modal
         function openModal(card) {
             document.getElementById('modal-title').innerText = card.querySelector('h2').innerText;
-            document.getElementById('modal-date').innerText = card.querySelector('.log-date').innerText;
             document.getElementById('modal-text').innerText = card.querySelector('p').innerText;
-            overlay.classList.add('active');
+            document.getElementById('modal-overlay').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
         function closeModal() {
-            overlay.classList.remove('active');
+            document.getElementById('modal-overlay').classList.remove('active');
             document.body.style.overflow = 'auto';
         }
     </script>
