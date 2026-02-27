@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Black Parallax Experience</title>
+    <style>
+        :root {
+            --glass-bg: rgba(20, 20, 20, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.18);
+            --glass-highlight: rgba(255, 255, 255, 0.1);
+            --accent-color: #ffffff;
+            --color-1: #2C5067;
+            --color-2: #3BA6A6;
+            --color-3: #50BF58;
+            --color-4: #F2CA52;
+            --color-5: #F23839;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none !important;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #000;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* --- SIDEBAR ESTÁTICA NO TOPO --- */
+        .top-sidebar {
+            position: absolute;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            display: flex;
+            gap: 40px;
+        }
+
+        .nav-item {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .nav-star {
+            width: 24px;
+            height: 24px;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-item:hover .nav-star {
+            transform: scale(1.4) rotate(90deg);
+        }
+
+        .nav-label {
+            position: absolute;
+            top: 35px;
+            font-size: 0.6rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: 0;
+            white-space: nowrap;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            color: #fff;
+        }
+
+        .nav-item:hover .nav-label { opacity: 1; }
+
+        /* --- CURSOR E BACKGROUND --- */
+        #custom-cursor {
+            position: fixed; width: 24px; height: 24px; fill: var(--accent-color);
+            pointer-events: none; z-index: 9999; transform: translate(-50%, -50%);
+            filter: drop-shadow(0 0 8px rgba(255,255,255,0.8));
+            transition: transform 0.1s ease-out;
+        }
+
+        #bg-container { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: -1; background-color: #000; }
+
+        /* --- AJUSTE DE SEÇÕES (FLUXO LIVRE) --- */
+        section {
+            min-height: 100vh; /* Permite que a seção cresça se o conteúdo for maior */
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 100px 20px; /* Aumentado para evitar cortes */
+        }
+
+        .logo-container img { max-width: 220px; margin-bottom: 1.5rem; filter: drop-shadow(0 0 10px rgba(255,255,255,0.1)); }
+        .title-explore { font-size: 1rem; letter-spacing: 12px; font-weight: 200; text-transform: uppercase; opacity: 0.8; margin-bottom: 2rem; }
+
+        .scroll-star-static {
+            width: 35px; height: 35px; fill: var(--accent-color);
+            margin-top: 40px; animation: star-glow-pulse 2.5s infinite ease-in-out;
+        }
+
+        @keyframes star-glow-pulse {
+            0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.3; filter: blur(1px); }
+            50% { transform: scale(1.3) rotate(90deg); opacity: 1; filter: drop-shadow(0 0 15px #fff); }
+        }
+
+        /* --- CARROSSEL --- */
+        .carousel-container { 
+            width: 100%; 
+            max-width: 1200px; 
+            display: flex; 
+            gap: 25px; 
+            overflow-x: auto; 
+            padding: 20px; 
+            scroll-snap-type: x mandatory; 
+            scrollbar-width: none; 
+        }
+        .carousel-container::-webkit-scrollbar { display: none; }
+
+        .log-card {
+            min-width: 320px; height: 420px; background: var(--glass-bg);
+            backdrop-filter: blur(45px) saturate(210%); -webkit-backdrop-filter: blur(45px) saturate(210%);
+            border: 1.5px solid var(--glass-border); border-radius: 28px; padding: 35px;
+            display: flex; flex-direction: column; justify-content: space-between;
+            scroll-snap-align: center; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative; box-shadow: inset 0 0 15px var(--glass-highlight), 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .log-card:hover { transform: scale(1.03) translateY(-5px); border-color: rgba(255, 255, 255, 0.4); }
+        .log-date { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; opacity: 0.4; }
+        .log-card h2 { font-size: 1.6rem; font-weight: 400; margin: 15px 0; }
+        .log-card p { font-size: 0.95rem; line-height: 1.6; color: rgba(255,255,255,0.5); display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+
+        /* --- MODAL --- */
+        #modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); z-index: 2000; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; }
+        .modal-content { background: var(--glass-bg); backdrop-filter: blur(50px) saturate(200%); border: 1.5px solid var(--glass-border); padding: 40px; border-radius: 32px; max-width: 600px; width: 90%; transform: scale(0.9); transition: transform 0.3s ease; }
+        #modal-overlay.active { display: flex; opacity: 1; }
+        #modal-overlay.active .modal-content { transform: scale(1); }
+
+        .glass-card-simple {
+            background: var(--glass-bg); backdrop-filter: blur(45px) saturate(210%);
+            border: 1.5px solid var(--glass-border); border-radius: 28px; padding: 50px;
+            max-width: 550px; text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <svg id="custom-cursor" viewBox="0 0 24 24">
+        <path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z" />
+    </svg>
+
+    <nav class="top-sidebar">
+        <a href="#home" class="nav-item">
+            <svg class="nav-star" viewBox="0 0 24 24" style="fill: var(--color-1);"><path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z" /></svg>
+            <span class="nav-label">Home</span>
+        </a>
+        <a href="#diario" class="nav-item">
+            <svg class="nav-star" viewBox="0 0 24 24" style="fill: var(--color-2);"><path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z" /></svg>
+            <span class="nav-label">Diário</span>
+        </a>
+        <a href="#projetos" class="nav-item">
+            <svg class="nav-star" viewBox="0 0 24 24" style="fill: var(--color-3);"><path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z" /></svg>
+            <span class="nav-label">Projetos</span>
+        </a>
+        <a href="#sobre" class="nav-item">
+            <svg class="nav-star" viewBox="0 0 24 24" style="fill: var(--color-4);"><path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z" /></svg>
+            <span class="nav-label">Sobre</span>
+        </a>
+        <a href="#contato" class="nav-item">
+            <svg class="nav-star" viewBox="0 0 24 24" style="fill: var(--color-5);"><path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z" /></svg>
+            <span class="nav-label">Contato</span>
+        </a>
+    </nav>
+
+    <div id="bg-container"></div>
+
+    <div class="content-wrapper">
+        <section id="home">
+            <div class="logo-container">
+                <img src="https://github.com/identicons/pablo.png" alt="Logo">
+            </div>
+            <h1 class="title-explore">EXPLORE</h1>
+            <svg class="scroll-star-static" viewBox="0 0 24 24">
+                <path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z" />
+            </svg>
+        </section>
+
+        <section id="diario">
+            <h2 style="margin-bottom: 30px; font-weight: 200; letter-spacing: 5px;">DIÁRIO DE BORDO</h2>
+            <div class="carousel-container">
+                <div class="log-card" onclick="openModal(this)">
+                    <span class="log-date">27 FEV 2026</span>
+                    <div><h2>Fluxo Livre</h2><p>Agora a seção cresce conforme o conteúdo, evitando que os cards pareçam cortados no final do scroll.</p></div>
+                </div>
+                <div class="log-card" onclick="openModal(this)">
+                    <span class="log-date">01 MAR 2026</span>
+                    <div><h2>Scroll Suave</h2><p>As seções respeitam o padding e permitem uma navegação sem caixas limitadoras rígidas.</p></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="projetos">
+            <div class="glass-card-simple"><h2>PROJETOS</h2><p>Repositório experimental integrado ao design.</p></div>
+        </section>
+
+        <section id="sobre">
+            <div class="glass-card-simple"><h2>SOBRE</h2><p>Desenvolvimento focado em experiência de usuário.</p></div>
+        </section>
+
+        <section id="contato">
+            <div class="glass-card-simple"><h2>CONTATO</h2><p>Disponível para novos projetos e colaborações.</p></div>
+        </section>
+    </div>
+
+    <div id="modal-overlay" onclick="closeModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <span id="modal-date" class="log-date"></span>
+            <h2 id="modal-title" style="margin: 20px 0; font-weight: 400;"></h2>
+            <p id="modal-text" style="color: rgba(255,255,255,0.7); line-height: 1.8;"></p>
+        </div>
+    </div>
+
+    <script>
+        const cursor = document.getElementById('custom-cursor');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        const overlay = document.getElementById('modal-overlay');
+        function openModal(card) {
+            document.getElementById('modal-title').innerText = card.querySelector('h2').innerText;
+            document.getElementById('modal-date').innerText = card.querySelector('.log-date').innerText;
+            document.getElementById('modal-text').innerText = card.querySelector('p').innerText;
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeModal() {
+            overlay.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+    </script>
+</body>
+</html>
