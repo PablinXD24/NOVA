@@ -86,24 +86,29 @@
 
         #bg-container { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: -1; background-color: #000; }
 
-        /* --- AJUSTE DE SEÇÕES (FLUXO LIVRE) --- */
+        /* --- SEÇÕES --- */
         section {
-            min-height: 100vh; /* Permite que a seção cresça se o conteúdo for maior */
+            min-height: 100vh;
             width: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             position: relative;
-            padding: 100px 20px; /* Aumentado para evitar cortes */
+            padding: 100px 20px;
         }
 
-        .logo-container img { max-width: 220px; margin-bottom: 1.5rem; filter: drop-shadow(0 0 10px rgba(255,255,255,0.1)); }
-        .title-explore { font-size: 1rem; letter-spacing: 12px; font-weight: 200; text-transform: uppercase; opacity: 0.8; margin-bottom: 2rem; }
+        /* LOGO NOVA BEM GRANDE */
+        .logo-container img { 
+            width: 450px; /* Logo aumentada conforme solicitado */
+            height: auto;
+            margin-bottom: 0; 
+            filter: drop-shadow(0 0 20px rgba(255,255,255,0.15)); 
+        }
 
         .scroll-star-static {
             width: 35px; height: 35px; fill: var(--accent-color);
-            margin-top: 40px; animation: star-glow-pulse 2.5s infinite ease-in-out;
+            margin-top: 50px; animation: star-glow-pulse 2.5s infinite ease-in-out;
         }
 
         @keyframes star-glow-pulse {
@@ -185,9 +190,8 @@
     <div class="content-wrapper">
         <section id="home">
             <div class="logo-container">
-                <img src="novalogo" alt="Logo">
+                <img src="https://github.com/identicons/nova.png" alt="nova">
             </div>
-            <h1 class="title-explore">EXPLORE</h1>
             <svg class="scroll-star-static" viewBox="0 0 24 24">
                 <path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z" />
             </svg>
@@ -198,25 +202,25 @@
             <div class="carousel-container">
                 <div class="log-card" onclick="openModal(this)">
                     <span class="log-date">27 FEV 2026</span>
-                    <div><h2>Fluxo Livre</h2><p>Agora a seção cresce conforme o conteúdo, evitando que os cards pareçam cortados no final do scroll.</p></div>
+                    <div><h2>Foco na Marca</h2><p>A logo "nova" agora ocupa o centro do palco com dimensões ampliadas para impacto visual imediato.</p></div>
                 </div>
                 <div class="log-card" onclick="openModal(this)">
                     <span class="log-date">01 MAR 2026</span>
-                    <div><h2>Scroll Suave</h2><p>As seções respeitam o padding e permitem uma navegação sem caixas limitadoras rígidas.</p></div>
+                    <div><h2>Minimalismo Puro</h2><p>Removemos as distrações textuais abaixo da logo para um design mais limpo e focado.</p></div>
                 </div>
             </div>
         </section>
 
         <section id="projetos">
-            <div class="glass-card-simple"><h2>PROJETOS</h2><p>Repositório experimental integrado ao design.</p></div>
+            <div class="glass-card-simple"><h2>PROJETOS</h2><p>Exploração de interfaces e novas tecnologias.</p></div>
         </section>
 
         <section id="sobre">
-            <div class="glass-card-simple"><h2>SOBRE</h2><p>Desenvolvimento focado em experiência de usuário.</p></div>
+            <div class="glass-card-simple"><h2>SOBRE</h2><p>Design imersivo focado em detalhes e performance.</p></div>
         </section>
 
         <section id="contato">
-            <div class="glass-card-simple"><h2>CONTATO</h2><p>Disponível para novos projetos e colaborações.</p></div>
+            <div class="glass-card-simple"><h2>CONTATO</h2><p>Dê vida a novos projetos de interface.</p></div>
         </section>
     </div>
 
