@@ -184,6 +184,116 @@
         }
         .gantt-bar:hover { transform: scaleY(1.2); opacity: 1; filter: brightness(1.3) drop-shadow(0 0 15px var(--bar-color)); }
 
+        /* --- NOVA SEÇÃO SOBRE (DECK EXPANSÍVEL) --- */
+        .sobre-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1000px;
+            padding: 40px 0;
+        }
+
+        .story-deck {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            height: 450px;
+            width: 320px; /* Largura inicial do "monte" */
+            transition: width 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .story-card {
+            position: absolute;
+            width: 280px;
+            height: 420px;
+            background: var(--glass-bg);
+            border: 1.5px solid var(--glass-border);
+            border-radius: 24px;
+            overflow: hidden;
+            transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+            box-shadow: -15px 0 30px rgba(0,0,0,0.5);
+            flex-shrink: 0;
+        }
+
+        .story-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(30%);
+            transition: filter 0.3s ease;
+        }
+
+        /* Empilhamento inicial (Monte) */
+        .story-card:nth-child(1) { transform: translateX(0px) rotate(-3deg); z-index: 5; }
+        .story-card:nth-child(2) { transform: translateX(10px) rotate(-1deg); z-index: 4; }
+        .story-card:nth-child(3) { transform: translateX(20px) rotate(1deg); z-index: 3; }
+        .story-card:nth-child(4) { transform: translateX(30px) rotate(3deg); z-index: 2; }
+        .story-card:nth-child(5) { transform: translateX(40px) rotate(5deg); z-index: 1; }
+
+        /* Expansão Horizontal no Hover (Desktop) */
+        @media (min-width: 769px) {
+            .story-deck:hover {
+                width: 1200px; /* Largura expandida para caber as cartas lado a lado */
+            }
+
+            .story-deck:hover .story-card {
+                position: relative;
+                transform: translateX(0) rotate(0deg) scale(0.95);
+                margin: 0 -40px; /* Sobreposição elegante */
+                box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+                cursor: pointer !important;
+            }
+
+            .story-deck:hover .story-card:hover {
+                transform: scale(1.05) translateY(-20px);
+                z-index: 100;
+                margin: 0 10px;
+                border-color: #fff;
+            }
+
+            .story-deck:hover .story-card img {
+                filter: grayscale(0%);
+            }
+        }
+
+        /* --- COMPORTAMENTO MOBILE (SCROLL) --- */
+        @media (max-width: 768px) {
+            .sobre-container {
+                overflow-x: auto;
+                justify-content: flex-start;
+                padding-left: 10%;
+                scrollbar-width: none;
+            }
+            .sobre-container::-webkit-scrollbar { display: none; }
+
+            .story-deck {
+                display: flex;
+                width: max-content;
+                height: 400px;
+                gap: 15px;
+            }
+
+            .story-card {
+                position: relative;
+                transform: none !important;
+                width: 250px;
+                height: 380px;
+                box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+            }
+
+            .story-card img { filter: grayscale(0%); }
+            
+            .instrucao-mobile {
+                display: block;
+                font-size: 0.7rem;
+                letter-spacing: 2px;
+                opacity: 0.5;
+                margin-top: 20px;
+            }
+        }
+
         /* --- MODAL --- */
         #modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); z-index: 2000; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; }
         .modal-content { background: var(--glass-bg); backdrop-filter: blur(50px) saturate(200%); border: 1.5px solid var(--glass-border); padding: 40px; border-radius: 32px; max-width: 800px; width: 90%; max-height: 80vh; overflow-y: auto; transform: scale(0.9); transition: transform 0.3s ease; }
@@ -193,7 +303,7 @@
 
         .glass-card-simple { background: var(--glass-bg); backdrop-filter: blur(45px) saturate(210%); border: 1.5px solid var(--glass-border); border-radius: 28px; padding: 50px; max-width: 550px; width: 90%; text-align: center; }
 
-        /* --- RESPONSIVIDADE MOBILE --- */
+        /* --- RESPONSIVIDADE GERAL --- */
         @media (max-width: 768px) {
             * { cursor: auto !important; }
             #custom-cursor { display: none; }
@@ -336,7 +446,21 @@
             </div>
         </section>
 
-        <section id="sobre"><div class="glass-card-simple"><h2>SOBRE</h2><p>Design imersivo focado em detalhes.</p></div></section>
+        <section id="sobre">
+            <h2 style="margin-bottom: 20px; font-weight: 200; letter-spacing: 5px; text-align: center;">SOBRE O NOVA</h2>
+            <div class="sobre-container">
+                <div class="story-deck">
+                    <div class="story-card"><img src="https://drive.google.com/drive/u/0/folders/1xC_NXjT3I5N3rTIxSWOqG9Q5HRUyGt30" alt="Marketing Nova 1"></div>
+                    <div class="story-card"><img src="LINK_DO_DRIVE_2" alt="Marketing Nova 2"></div>
+                    <div class="story-card"><img src="LINK_DO_DRIVE_3" alt="Marketing Nova 3"></div>
+                    <div class="story-card"><img src="LINK_DO_DRIVE_4" alt="Marketing Nova 4"></div>
+                    <div class="story-card"><img src="LINK_DO_DRIVE_5" alt="Marketing Nova 5"></div>
+                </div>
+            </div>
+            <p class="instrucao-mobile" style="text-align: center; display: none;">DESLIZE PARA VER MAIS</p>
+            <p class="instrucao-desktop" style="text-align: center; font-size: 0.7rem; opacity: 0.4; letter-spacing: 2px;">PASSE O MOUSE PARA EXPANDIR</p>
+        </section>
+
         <section id="contato"><div class="glass-card-simple"><h2>CONTATO</h2><p>Criações digitais modernas.</p></div></section>
     </div>
 
@@ -413,13 +537,12 @@
             text.style.display = 'none';
             container.innerHTML = '';
 
-            // Filtra cards que pertencem à fase clicada
             const allCards = document.querySelectorAll('.log-card');
             allCards.forEach(card => {
                 if(card.getAttribute('data-fase') === fase) {
                     const clone = card.cloneNode(true);
-                    clone.onclick = null; // Remove clique do clone para evitar loops
-                    clone.style.minWidth = 'auto'; // Ajusta largura no grid
+                    clone.onclick = null; 
+                    clone.style.minWidth = 'auto'; 
                     clone.style.transform = 'none';
                     container.appendChild(clone);
                 }
@@ -432,6 +555,12 @@
         function closeModal() {
             document.getElementById('modal-overlay').classList.remove('active');
             document.body.style.overflow = 'auto';
+        }
+
+        // Detectar se é mobile para ajustar instrução
+        if (window.innerWidth <= 768) {
+            document.querySelector('.instrucao-mobile').style.display = 'block';
+            document.querySelector('.instrucao-desktop').style.display = 'none';
         }
     </script>
 </body>
