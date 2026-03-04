@@ -68,6 +68,7 @@
 
         #bg-container { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: -1; background-color: #000; }
 
+        /* --- EFEITO DE TRANSIÇÃO DE SEÇÃO --- */
         section {
             min-height: 100vh;
             width: 100%;
@@ -77,6 +78,14 @@
             justify-content: center;
             position: relative;
             padding: 80px 20px;
+            opacity: 0; /* Começa invisível para o efeito */
+            transform: translateY(30px);
+            transition: opacity 1.2s ease, transform 1.2s ease;
+        }
+
+        section.section-visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .logo-container img { width: 450px; max-width: 90%; height: auto; filter: drop-shadow(0 0 20px rgba(255,255,255,0.1)); }
@@ -240,7 +249,7 @@
             border-color: #fff;
         }
 
-        /* --- ANEL 3D COM IMAGENS --- */
+        /* --- ANEL 3D --- */
         .contact-3d-scene {
             position: relative;
             width: 100%;
@@ -293,11 +302,10 @@
             border-bottom: 1.5px solid var(--glass-border);
             backface-visibility: visible; 
             transform-style: preserve-3d;
-            background-size: 3168px 100%; /* 88px * 36 faces */
+            background-size: 3168px 100%;
             background-repeat: no-repeat;
         }
 
-        /* Camada interna para imagem diferente dentro */
         .ring-face::before {
             content: '';
             position: absolute;
@@ -306,7 +314,7 @@
             backface-visibility: hidden;
             background-size: 3168px 100%;
             background-repeat: no-repeat;
-            opacity: 0.8; /* Leve transparência para o interno */
+            opacity: 0.8;
         }
 
         @keyframes rotateRing {
@@ -371,7 +379,7 @@
     <div class="content-wrapper">
         <section id="home">
             <div class="logo-container">
-                <img src="https://raw.githubusercontent.com/PabloS-Nova/Nova-Experience/main/logo.png" alt="novalogo">
+                <img src="novalogo" alt="novalogo">
             </div>
             <svg class="scroll-star-static" viewBox="0 0 24 24">
                 <path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z" />
@@ -440,11 +448,11 @@
             <h2 style="margin-bottom: 50px; font-weight: 200; letter-spacing: 5px; text-align: center;">SOBRE O NOVA</h2>
             <div class="sobre-container">
                 <div class="story-deck" id="story-deck">
-                    <div class="story-card" data-state="deck" onclick="handleCardClick(this)"><img src="https://raw.githubusercontent.com/PabloS-Nova/Nova-Experience/main/img1.jpg" alt="1"></div>
-                    <div class="story-card" data-state="deck" onclick="handleCardClick(this)"><img src="https://raw.githubusercontent.com/PabloS-Nova/Nova-Experience/main/img2.jpg" alt="2"></div>
-                    <div class="story-card" data-state="deck" onclick="handleCardClick(this)"><img src="https://raw.githubusercontent.com/PabloS-Nova/Nova-Experience/main/img3.jpg" alt="3"></div>
-                    <div class="story-card" data-state="deck" onclick="handleCardClick(this)"><img src="https://raw.githubusercontent.com/PabloS-Nova/Nova-Experience/main/img4.jpg" alt="4"></div>
-                    <div class="story-card" data-state="deck" onclick="handleCardClick(this)"><img src="https://raw.githubusercontent.com/PabloS-Nova/Nova-Experience/main/img5.jpg" alt="5"></div>
+                    <div class="story-card" data-state="deck" onclick="handleCardClick(this)"><img src="adriana" alt="1"></div>
+                    <div class="story-card" data-state="deck" onclick="handleCardClick(this)"><img src="bianca" alt="2"></div>
+                    <div class="story-card" data-state="deck" onclick="handleCardClick(this)"><img src="dante" alt="3"></div>
+                    <div class="story-card" data-state="deck" onclick="handleCardClick(this)"><img src="joao" alt="4"></div>
+                    <div class="story-card" data-state="deck" onclick="handleCardClick(this)"><img src="pablo" alt="5"></div>
                 </div>
             </div>
         </section>
@@ -455,8 +463,7 @@
                     <h2>MOTIVAÇÃO</h2>
                     <p style="font-size: 0.6rem; letter-spacing: 5px; opacity: 0.5; margin-top: 10px;">PABLO S. NOVA</p>
                 </div>
-                <div class="ring-master" id="image-ring">
-                    </div>
+                <div class="ring-master" id="image-ring"></div>
             </div>
         </section>
     </div>
@@ -479,9 +486,22 @@
         let startX, scrollLeft;
         let autoScrollActive = true;
 
-        // LINKS DAS IMAGENS (Cole seus links aqui)
-        const imgExterna = "LINK_DA_IMAGEM_EXTERNA";
-        const imgInterna = "LINK_DA_IMAGEM_INTERNA";
+        const imgExterna = "bannerext";
+        const imgInterna = "bannerint";
+
+        // --- NOVO: EFEITO DE TRANSIÇÃO DE ABA (REVELAÇÃO) ---
+        const observerOptions = { threshold: 0.2 };
+        const sectionObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('section-visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('section').forEach(section => {
+            sectionObserver.observe(section);
+        });
 
         function createRingWithImages() {
             const faces = 36;
@@ -494,16 +514,10 @@
                 face.className = 'ring-face';
                 const angle = i * (360 / faces);
                 face.style.transform = `rotateY(${angle}deg) translateZ(${radius}px)`;
-                
-                // Imagem Externa (Fatiada)
                 face.style.backgroundImage = `url('${imgExterna}')`;
                 face.style.backgroundPosition = `${-i * faceWidth}px center`;
                 face.style.backgroundSize = `${totalWidth}px 100%`;
-
-                // Imagem Interna (Fatiada aplicada no pseudo-elemento)
-                face.style.setProperty('--img-interna', `url('${imgInterna}')`);
                 
-                // Adicionando a imagem interna via Style para facilitar o controle do fatiamento
                 const innerStyle = document.createElement('style');
                 innerStyle.innerHTML = `
                     .ring-face:nth-child(${i+1})::before {
@@ -513,13 +527,11 @@
                     }
                 `;
                 document.head.appendChild(innerStyle);
-
                 ringContainer.appendChild(face);
             }
         }
         createRingWithImages();
 
-        // CURSOR
         document.addEventListener('mousemove', (e) => {
             if (window.innerWidth > 768) {
                 cursor.style.left = e.clientX + 'px';
@@ -527,7 +539,6 @@
             }
         });
 
-        // CARROSSEL
         function autoScroll() {
             if (autoScrollActive && !isDown) {
                 carousel.scrollLeft += 0.8; 
@@ -551,7 +562,6 @@
             carousel.scrollLeft = scrollLeft - (x - startX) * 2;
         });
 
-        // DECK DE CARTAS
         function handleCardClick(card) {
             const state = card.getAttribute('data-state');
             if (state === "deck") {
@@ -563,8 +573,9 @@
             }
         }
 
-        // MODAIS
+        // --- AJUSTADO: MODAIS DO DIÁRIO ---
         function openModal(card) {
+            document.getElementById('modal-cards-container').innerHTML = ''; // Limpa grid se houver resquício de Gantt
             document.getElementById('modal-title').innerText = card.querySelector('h2').innerText;
             document.getElementById('modal-text').innerText = card.querySelector('p').innerText;
             document.getElementById('modal-overlay').classList.add('active');
@@ -576,15 +587,25 @@
             autoScrollActive = true;
         }
 
+        // --- AJUSTADO: ABRIR CARD DO DIÁRIO PELO GANTT ---
         function openGanttModal(fase) {
             const container = document.getElementById('modal-cards-container');
             container.innerHTML = '';
+            document.getElementById('modal-text').innerText = ''; // Limpa texto simples
+            
+            let found = false;
             document.querySelectorAll('.log-card').forEach(card => {
                 if(card.getAttribute('data-fase') === fase) {
-                    container.appendChild(card.cloneNode(true));
+                    const clone = card.cloneNode(true);
+                    clone.onclick = null; // Evita abrir modal dentro de modal
+                    container.appendChild(clone);
+                    found = true;
                 }
             });
-            document.getElementById('modal-title').innerText = "Linha do Tempo: " + fase;
+            
+            document.getElementById('modal-title').innerText = "Diário de Bordo: " + fase;
+            if(!found) document.getElementById('modal-text').innerText = "Nenhum registro encontrado para esta fase.";
+            
             document.getElementById('modal-overlay').classList.add('active');
             autoScrollActive = false;
         }
