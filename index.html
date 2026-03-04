@@ -15,9 +15,6 @@
             --color-3: #50BF58;
             --color-4: #F2CA52;
             --color-5: #F23839;
-            /* COLOQUE AS URLs DAS IMAGENS AQUI */
-            --img-externa: url('https://images.unsplash.com/photo-1464802686167-b939a67e06a1?q=80&w=2070');
-            --img-interna: url('https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?q=80&w=2071');
         }
 
         * {
@@ -243,7 +240,7 @@
             border-color: #fff;
         }
 
-        /* --- ANEL 3D COM IMAGENS (INTERNA E EXTERNA) --- */
+        /* --- ANEL 3D COM IMAGENS --- */
         .contact-3d-scene {
             position: relative;
             width: 100%;
@@ -257,9 +254,9 @@
 
         .motivation-core {
             position: absolute;
-            z-index: 150;
+            z-index: 200;
             text-align: center;
-            background: rgba(10, 10, 10, 0.8);
+            background: rgba(10, 10, 10, 0.85);
             backdrop-filter: blur(35px);
             padding: 35px 80px;
             border-radius: 100px;
@@ -281,7 +278,7 @@
             width: 100%;
             height: 100%;
             transform-style: preserve-3d;
-            animation: rotateRing 40s linear infinite;
+            animation: rotateRing 35s linear infinite;
         }
 
         .ring-face {
@@ -292,36 +289,24 @@
             top: 50%;
             margin-left: -44px;
             margin-top: -190px;
+            border-top: 1.5px solid var(--glass-border);
+            border-bottom: 1.5px solid var(--glass-border);
+            backface-visibility: visible; 
             transform-style: preserve-3d;
-            backface-visibility: visible;
+            background-size: 3168px 100%; /* 88px * 36 faces */
+            background-repeat: no-repeat;
         }
 
-        /* LADO EXTERNO */
+        /* Camada interna para imagem diferente dentro */
         .ring-face::before {
             content: '';
             position: absolute;
             inset: 0;
-            background-image: var(--img-externa);
-            background-size: 3168px 100%; /* 88px * 36 faces */
-            background-repeat: no-repeat;
-            border-top: 1.5px solid var(--glass-border);
-            border-bottom: 1.5px solid var(--glass-border);
-            transform: translateZ(1px); /* Garante que fique na frente */
-        }
-
-        /* LADO INTERNO */
-        .ring-face::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background-image: var(--img-interna);
+            transform: rotateY(180deg);
+            backface-visibility: hidden;
             background-size: 3168px 100%;
             background-repeat: no-repeat;
-            border-top: 1.5px solid var(--glass-border);
-            border-bottom: 1.5px solid var(--glass-border);
-            /* Inverte e translada para dentro para criar o efeito interno sem espelhar a imagem */
-            transform: rotateY(180deg) translateZ(1px);
-            filter: brightness(0.6); /* Diferencia visualmente o interior */
+            opacity: 0.8; /* Leve transparência para o interno */
         }
 
         @keyframes rotateRing {
@@ -346,8 +331,8 @@
             section { padding: 40px 10px; }
             .logo-container img { width: 280px; }
             .contact-3d-scene { height: 500px; }
-            .ring-face { height: 280px; width: 50px; margin-left: -25px; margin-top: -140px; }
-            .ring-face::before, .ring-face::after { background-size: 1800px 100%; }
+            .ring-face { height: 280px; width: 50px; margin-left: -25px; margin-top: -140px; background-size: 1800px 100%; }
+            .ring-face::before { background-size: 1800px 100%; }
             .motivation-core h2 { font-size: 1.3rem; letter-spacing: 6px; }
         }
     </style>
@@ -471,7 +456,7 @@
                     <p style="font-size: 0.6rem; letter-spacing: 5px; opacity: 0.5; margin-top: 10px;">PABLO S. NOVA</p>
                 </div>
                 <div class="ring-master" id="image-ring">
-                </div>
+                    </div>
             </div>
         </section>
     </div>
@@ -494,35 +479,45 @@
         let startX, scrollLeft;
         let autoScrollActive = true;
 
-        // GERAÇÃO DO ANEL (36 faces com mapeamento de imagem)
-        function createImageRing() {
+        // LINKS DAS IMAGENS (Cole seus links aqui)
+        const imgExterna = "LINK_DA_IMAGEM_EXTERNA";
+        const imgInterna = "LINK_DA_IMAGEM_INTERNA";
+
+        function createRingWithImages() {
             const faces = 36;
             const radius = window.innerWidth < 768 ? 280 : 500;
+            const faceWidth = window.innerWidth < 768 ? 50 : 88;
+            const totalWidth = faceWidth * faces;
+
             for (let i = 0; i < faces; i++) {
                 const face = document.createElement('div');
                 face.className = 'ring-face';
                 const angle = i * (360 / faces);
                 face.style.transform = `rotateY(${angle}deg) translateZ(${radius}px)`;
                 
-                // Mapeia a posição da imagem para cada face para que ela pareça contínua
-                const pos = `${-i * 100}% center`;
-                face.style.setProperty('--face-pos', pos);
+                // Imagem Externa (Fatiada)
+                face.style.backgroundImage = `url('${imgExterna}')`;
+                face.style.backgroundPosition = `${-i * faceWidth}px center`;
+                face.style.backgroundSize = `${totalWidth}px 100%`;
+
+                // Imagem Interna (Fatiada aplicada no pseudo-elemento)
+                face.style.setProperty('--img-interna', `url('${imgInterna}')`);
                 
-                // Aplicando o fatiamento da imagem via style direto para facilitar a continuidade
-                const faceStyle = `
-                    .ring-face:nth-child(${i+1})::before, 
-                    .ring-face:nth-child(${i+1})::after { 
-                        background-position: ${-i * 88}px center; 
+                // Adicionando a imagem interna via Style para facilitar o controle do fatiamento
+                const innerStyle = document.createElement('style');
+                innerStyle.innerHTML = `
+                    .ring-face:nth-child(${i+1})::before {
+                        background-image: url('${imgInterna}');
+                        background-position: ${-i * faceWidth}px center;
+                        background-size: ${totalWidth}px 100%;
                     }
                 `;
-                const styleSheet = document.createElement("style");
-                styleSheet.innerText = faceStyle;
-                document.head.appendChild(styleSheet);
+                document.head.appendChild(innerStyle);
 
                 ringContainer.appendChild(face);
             }
         }
-        createImageRing();
+        createRingWithImages();
 
         // CURSOR
         document.addEventListener('mousemove', (e) => {
