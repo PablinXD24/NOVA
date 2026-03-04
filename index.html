@@ -35,7 +35,7 @@
 
         /* --- SIDEBAR ESTÁTICA --- */
         .top-sidebar {
-            position: fixed; /* Mudado para fixed para consistência */
+            position: fixed;
             top: 30px;
             left: 50%;
             transform: translateX(-50%);
@@ -162,10 +162,9 @@
             border: 1px solid var(--glass-border);
             border-radius: 24px;
             padding: 20px;
-            overflow-x: auto; /* Permite scroll se necessário */
         }
 
-        .gantt-container { min-width: 550px; display: flex; flex-direction: column; gap: 15px; }
+        .gantt-container { display: flex; flex-direction: column; gap: 15px; }
         .gantt-header { display: flex; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px; margin-bottom: 10px; }
         .gantt-col-label { flex: 1; font-size: 0.65rem; opacity: 0.5; text-align: center; text-transform: uppercase; letter-spacing: 1px; }
         .gantt-row { display: flex; align-items: center; height: 35px; position: relative; }
@@ -187,13 +186,14 @@
         /* --- SEÇÃO SOBRE (UNO STYLE) --- */
         .sobre-container {
             width: 100%;
-            height: 550px;
+            height: 600px; /* Aumentado para comportar a carta ativa sem quebrar */
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
             align-items: center;
             position: relative;
             padding-bottom: 60px;
+            overflow: visible; /* Garante que a carta ativa suba sem ser cortada */
         }
 
         .story-deck {
@@ -256,18 +256,35 @@
             .nav-star { width: 20px; height: 20px; }
             .nav-label { display: none; }
 
-            section { padding: 60px 15px; }
+            section { padding: 60px 15px; overflow: hidden; } /* Evita scroll lateral na seção */
             .logo-container img { width: 320px; }
 
             h2 { font-size: 1.2rem !important; letter-spacing: 3px !important; }
 
+            /* --- GANTT MOBILE (Nova visualização em lista) --- */
+            .gantt-header { display: none; }
+            .gantt-row { 
+                height: auto; 
+                flex-direction: column; 
+                align-items: flex-start; 
+                gap: 8px; 
+                padding: 15px; 
+                background: rgba(255,255,255,0.05); 
+                border-radius: 15px;
+                margin-bottom: 5px;
+            }
+            .gantt-task-name { width: 100%; font-weight: 700; opacity: 1; }
+            .gantt-bar-area { width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 10px; }
+            .gantt-bar { position: relative; height: 100%; top: 0; left: 0 !important; width: 100% !important; }
+
             .carousel-container { padding: 20px 5vw; gap: 15px; }
             .log-card { min-width: 280px; height: 380px; padding: 20px; }
             
-            .story-deck { width: 200px; height: 300px; }
-            .story-card[data-state="active"] { transform: translateY(-200px) scale(1.1) rotate(0deg) !important; }
+            /* Ajuste de cartas no mobile */
+            .sobre-container { height: 500px; padding-bottom: 40px; }
+            .story-deck { width: 180px; height: 260px; }
+            .story-card[data-state="active"] { transform: translateY(-160px) scale(1.1) rotate(0deg) !important; }
             
-            /* Ajuste toque mobile */
             .story-deck:active .story-card[data-state="deck"]:nth-child(1) { transform: translateX(-60px) rotate(-10deg); }
             .story-deck:active .story-card[data-state="deck"]:nth-child(5) { transform: translateX(60px) rotate(10deg); }
         }
@@ -432,7 +449,6 @@
             carousel.scrollLeft = scrollLeft - walk;
         });
 
-        // Pausar auto-scroll no touch/interação
         carousel.addEventListener('touchstart', () => autoScrollActive = false);
         carousel.addEventListener('touchend', () => { setTimeout(() => autoScrollActive = true, 2000); });
 
