@@ -115,7 +115,6 @@
             height: 450px; 
             background: var(--glass-bg);
             backdrop-filter: blur(45px) saturate(210%);
-            -webkit-backdrop-filter: blur(45px) saturate(210%);
             border: 1.5px solid var(--glass-border); 
             border-radius: 28px; 
             padding: 30px;
@@ -144,7 +143,6 @@
         .card-5 { --card-glow: var(--color-5); box-shadow: 0 10px 30px rgba(242, 56, 57, 0.2); }
 
         .log-card:hover { transform: scale(1.03); border-color: rgba(255, 255, 255, 0.4); }
-        .log-card:hover::after { opacity: 0.4; }
 
         .card-header { display: flex; justify-content: space-between; font-size: 0.7rem; letter-spacing: 1px; text-transform: uppercase; opacity: 0.6; margin-bottom: 20px; }
         .card-fase { font-weight: 700; color: var(--card-glow); }
@@ -184,114 +182,66 @@
         }
         .gantt-bar:hover { transform: scaleY(1.2); opacity: 1; filter: brightness(1.3) drop-shadow(0 0 15px var(--bar-color)); }
 
-        /* --- NOVA SEÇÃO SOBRE (DECK EXPANSÍVEL) --- */
+        /* --- SEÇÃO SOBRE (UNO STYLE COM LEQUE NO HOVER) --- */
         .sobre-container {
             width: 100%;
+            height: 650px;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            justify-content: flex-end;
             align-items: center;
-            perspective: 1000px;
-            padding: 40px 0;
+            position: relative;
+            padding-bottom: 80px;
         }
 
         .story-deck {
-            display: flex;
-            align-items: center;
-            justify-content: center;
             position: relative;
-            height: 450px;
-            width: 320px; /* Largura inicial do "monte" */
-            transition: width 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+            width: 280px;
+            height: 400px;
+            perspective: 1000px;
         }
 
         .story-card {
             position: absolute;
             width: 280px;
-            height: 420px;
+            height: 400px;
             background: var(--glass-bg);
             border: 1.5px solid var(--glass-border);
             border-radius: 24px;
             overflow: hidden;
-            transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
-            box-shadow: -15px 0 30px rgba(0,0,0,0.5);
-            flex-shrink: 0;
+            transition: all 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            cursor: pointer !important;
+            transform-origin: center bottom;
         }
 
         .story-card img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            filter: grayscale(30%);
-            transition: filter 0.3s ease;
+            pointer-events: none;
         }
 
-        /* Empilhamento inicial (Monte) */
-        .story-card:nth-child(1) { transform: translateX(0px) rotate(-3deg); z-index: 5; }
-        .story-card:nth-child(2) { transform: translateX(10px) rotate(-1deg); z-index: 4; }
-        .story-card:nth-child(3) { transform: translateX(20px) rotate(1deg); z-index: 3; }
-        .story-card:nth-child(4) { transform: translateX(30px) rotate(3deg); z-index: 2; }
-        .story-card:nth-child(5) { transform: translateX(40px) rotate(5deg); z-index: 1; }
+        /* ESTADO INICIAL: Empilhadas */
+        .story-card[data-state="deck"]:nth-child(1) { transform: rotate(-2deg); z-index: 5; }
+        .story-card[data-state="deck"]:nth-child(2) { transform: rotate(-1deg); z-index: 4; }
+        .story-card[data-state="deck"]:nth-child(3) { transform: rotate(0deg); z-index: 3; }
+        .story-card[data-state="deck"]:nth-child(4) { transform: rotate(1deg); z-index: 2; }
+        .story-card[data-state="deck"]:nth-child(5) { transform: rotate(2deg); z-index: 1; }
 
-        /* Expansão Horizontal no Hover (Desktop) */
-        @media (min-width: 769px) {
-            .story-deck:hover {
-                width: 1200px; /* Largura expandida para caber as cartas lado a lado */
-            }
+        /* HOVER: Efeito Leque */
+        .story-deck:hover .story-card[data-state="deck"]:nth-child(1) { transform: translateX(-120px) rotate(-15deg); }
+        .story-deck:hover .story-card[data-state="deck"]:nth-child(2) { transform: translateX(-60px) rotate(-7deg); }
+        .story-deck:hover .story-card[data-state="deck"]:nth-child(3) { transform: translateX(0px) rotate(0deg); }
+        .story-deck:hover .story-card[data-state="deck"]:nth-child(4) { transform: translateX(60px) rotate(7deg); }
+        .story-deck:hover .story-card[data-state="deck"]:nth-child(5) { transform: translateX(120px) rotate(15deg); }
 
-            .story-deck:hover .story-card {
-                position: relative;
-                transform: translateX(0) rotate(0deg) scale(0.95);
-                margin: 0 -40px; /* Sobreposição elegante */
-                box-shadow: 0 10px 40px rgba(0,0,0,0.8);
-                cursor: pointer !important;
-            }
-
-            .story-deck:hover .story-card:hover {
-                transform: scale(1.05) translateY(-20px);
-                z-index: 100;
-                margin: 0 10px;
-                border-color: #fff;
-            }
-
-            .story-deck:hover .story-card img {
-                filter: grayscale(0%);
-            }
-        }
-
-        /* --- COMPORTAMENTO MOBILE (SCROLL) --- */
-        @media (max-width: 768px) {
-            .sobre-container {
-                overflow-x: auto;
-                justify-content: flex-start;
-                padding-left: 10%;
-                scrollbar-width: none;
-            }
-            .sobre-container::-webkit-scrollbar { display: none; }
-
-            .story-deck {
-                display: flex;
-                width: max-content;
-                height: 400px;
-                gap: 15px;
-            }
-
-            .story-card {
-                position: relative;
-                transform: none !important;
-                width: 250px;
-                height: 380px;
-                box-shadow: 0 10px 20px rgba(0,0,0,0.4);
-            }
-
-            .story-card img { filter: grayscale(0%); }
-            
-            .instrucao-mobile {
-                display: block;
-                font-size: 0.7rem;
-                letter-spacing: 2px;
-                opacity: 0.5;
-                margin-top: 20px;
-            }
+        /* ESTADO ATIVO: Carta Jogada para cima */
+        .story-card[data-state="active"] {
+            transform: translateY(-300px) scale(1.3) rotate(0deg) !important;
+            z-index: 100;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.8), 0 0 25px rgba(255,255,255,0.2);
+            border-color: #fff;
         }
 
         /* --- MODAL --- */
@@ -303,17 +253,14 @@
 
         .glass-card-simple { background: var(--glass-bg); backdrop-filter: blur(45px) saturate(210%); border: 1.5px solid var(--glass-border); border-radius: 28px; padding: 50px; max-width: 550px; width: 90%; text-align: center; }
 
-        /* --- RESPONSIVIDADE GERAL --- */
         @media (max-width: 768px) {
             * { cursor: auto !important; }
             #custom-cursor { display: none; }
             .top-sidebar { gap: 20px; top: 20px; width: 90%; justify-content: center; }
-            .nav-star { width: 20px; height: 20px; }
             .nav-label { display: none; }
-            .log-card { min-width: 260px; height: 380px; padding: 20px; }
-            .carousel-container { padding: 40px 50px; }
-            h2 { font-size: 1.2rem !important; }
-            .carousel-wrapper { -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent); }
+            .story-card[data-state="active"] { transform: translateY(-220px) scale(1.1) rotate(0deg) !important; }
+            /* Desabilitar leque no mobile para evitar conflito com touch */
+            .story-deck:hover .story-card[data-state="deck"] { transform: none; }
         }
     </style>
 </head>
@@ -351,7 +298,7 @@
     <div class="content-wrapper">
         <section id="home">
             <div class="logo-container">
-                <img src="novalogo" alt="novalogo">
+                <img src="https://raw.githubusercontent.com/PabloS-Nova/Nova-Experience/main/logo.png" alt="novalogo">
             </div>
             <svg class="scroll-star-static" viewBox="0 0 24 24">
                 <path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z" />
@@ -407,58 +354,27 @@
                         <div class="gantt-col-label">Semana 3</div>
                         <div class="gantt-col-label">Semana 4</div>
                     </div>
-                    
-                    <div class="gantt-row">
-                        <div class="gantt-task-name">UI/UX Design</div>
-                        <div class="gantt-bar-area">
-                            <div class="gantt-bar" onclick="openGanttModal('Fase 01')" style="width: 25%; left: 0%; --bar-color: var(--color-1);"></div>
-                        </div>
-                    </div>
-
-                    <div class="gantt-row">
-                        <div class="gantt-task-name">Core Engine</div>
-                        <div class="gantt-bar-area">
-                            <div class="gantt-bar" onclick="openGanttModal('Fase 02')" style="width: 40%; left: 15%; --bar-color: var(--color-2);"></div>
-                        </div>
-                    </div>
-
-                    <div class="gantt-row">
-                        <div class="gantt-task-name">Data Integration</div>
-                        <div class="gantt-bar-area">
-                            <div class="gantt-bar" onclick="openGanttModal('Fase 03')" style="width: 30%; left: 45%; --bar-color: var(--color-3);"></div>
-                        </div>
-                    </div>
-
-                    <div class="gantt-row">
-                        <div class="gantt-task-name">Testing</div>
-                        <div class="gantt-bar-area">
-                            <div class="gantt-bar" onclick="openGanttModal('Fase 04')" style="width: 20%; left: 70%; --bar-color: var(--color-4);"></div>
-                        </div>
-                    </div>
-
-                    <div class="gantt-row">
-                        <div class="gantt-task-name">Deployment</div>
-                        <div class="gantt-bar-area">
-                            <div class="gantt-bar" onclick="openGanttModal('Fase 05')" style="width: 10%; left: 90%; --bar-color: var(--color-5);"></div>
-                        </div>
-                    </div>
+                    <div class="gantt-row"><div class="gantt-task-name">UI/UX</div><div class="gantt-bar-area"><div class="gantt-bar" onclick="openGanttModal('Fase 01')" style="width: 25%; left: 0%; --bar-color: var(--color-1);"></div></div></div>
+                    <div class="gantt-row"><div class="gantt-task-name">Engine</div><div class="gantt-bar-area"><div class="gantt-bar" onclick="openGanttModal('Fase 02')" style="width: 40%; left: 15%; --bar-color: var(--color-2);"></div></div></div>
+                    <div class="gantt-row"><div class="gantt-task-name">Data</div><div class="gantt-bar-area"><div class="gantt-bar" onclick="openGanttModal('Fase 03')" style="width: 30%; left: 45%; --bar-color: var(--color-3);"></div></div></div>
+                    <div class="gantt-row"><div class="gantt-task-name">Testing</div><div class="gantt-bar-area"><div class="gantt-bar" onclick="openGanttModal('Fase 04')" style="width: 20%; left: 70%; --bar-color: var(--color-4);"></div></div></div>
+                    <div class="gantt-row"><div class="gantt-task-name">Deploy</div><div class="gantt-bar-area"><div class="gantt-bar" onclick="openGanttModal('Fase 05')" style="width: 10%; left: 90%; --bar-color: var(--color-5);"></div></div></div>
                 </div>
             </div>
         </section>
 
         <section id="sobre">
-            <h2 style="margin-bottom: 20px; font-weight: 200; letter-spacing: 5px; text-align: center;">SOBRE O NOVA</h2>
+            <h2 style="margin-bottom: 50px; font-weight: 200; letter-spacing: 5px; text-align: center;">SOBRE O NOVA</h2>
             <div class="sobre-container">
-                <div class="story-deck">
-                    <div class="story-card"><img src="https://drive.google.com/drive/u/0/folders/1xC_NXjT3I5N3rTIxSWOqG9Q5HRUyGt30" alt="Marketing Nova 1"></div>
-                    <div class="story-card"><img src="LINK_DO_DRIVE_2" alt="Marketing Nova 2"></div>
-                    <div class="story-card"><img src="LINK_DO_DRIVE_3" alt="Marketing Nova 3"></div>
-                    <div class="story-card"><img src="LINK_DO_DRIVE_4" alt="Marketing Nova 4"></div>
-                    <div class="story-card"><img src="LINK_DO_DRIVE_5" alt="Marketing Nova 5"></div>
+                <div class="story-deck" id="story-deck">
+                    <div class="story-card" data-state="deck" onclick="handleCardClick(this)"><img src="https://raw.githubusercontent.com/PabloS-Nova/Nova-Experience/main/img1.jpg" alt="1"></div>
+                    <div class="story-card" data-state="deck" onclick="handleCardClick(this)"><img src="https://raw.githubusercontent.com/PabloS-Nova/Nova-Experience/main/img2.jpg" alt="2"></div>
+                    <div class="story-card" data-state="deck" onclick="handleCardClick(this)"><img src="https://raw.githubusercontent.com/PabloS-Nova/Nova-Experience/main/img3.jpg" alt="3"></div>
+                    <div class="story-card" data-state="deck" onclick="handleCardClick(this)"><img src="https://raw.githubusercontent.com/PabloS-Nova/Nova-Experience/main/img4.jpg" alt="4"></div>
+                    <div class="story-card" data-state="deck" onclick="handleCardClick(this)"><img src="https://raw.githubusercontent.com/PabloS-Nova/Nova-Experience/main/img5.jpg" alt="5"></div>
                 </div>
             </div>
-            <p class="instrucao-mobile" style="text-align: center; display: none;">DESLIZE PARA VER MAIS</p>
-            <p class="instrucao-desktop" style="text-align: center; font-size: 0.7rem; opacity: 0.4; letter-spacing: 2px;">PASSE O MOUSE PARA EXPANDIR</p>
+            <p style="text-align: center; font-size: 0.7rem; opacity: 0.4; letter-spacing: 2px; margin-top: 20px;">PASSE O MOUSE PARA ABRIR O MONTE • CLIQUE PARA JOGAR</p>
         </section>
 
         <section id="contato"><div class="glass-card-simple"><h2>CONTATO</h2><p>Criações digitais modernas.</p></div></section>
@@ -478,8 +394,7 @@
         const cursor = document.getElementById('custom-cursor');
         const carousel = document.getElementById('carousel');
         let isDown = false;
-        let startX;
-        let scrollLeft;
+        let startX, scrollLeft;
         let autoScrollActive = true;
 
         document.addEventListener('mousemove', (e) => {
@@ -492,62 +407,33 @@
         function autoScroll() {
             if (autoScrollActive) {
                 carousel.scrollLeft += 1;
-                if (carousel.scrollLeft >= (carousel.scrollWidth - carousel.clientWidth)) {
-                    carousel.scrollLeft = 0;
-                }
+                if (carousel.scrollLeft >= (carousel.scrollWidth - carousel.clientWidth)) carousel.scrollLeft = 0;
             }
         }
         setInterval(autoScroll, 30);
 
-        carousel.addEventListener('mouseenter', () => autoScrollActive = false);
-        carousel.addEventListener('mouseleave', () => autoScrollActive = true);
-        carousel.addEventListener('touchstart', () => autoScrollActive = false);
-        carousel.addEventListener('touchend', () => { setTimeout(() => autoScrollActive = true, 2000); });
-
-        carousel.addEventListener('mousedown', (e) => {
-            isDown = true;
-            startX = e.pageX - carousel.offsetLeft;
-            scrollLeft = carousel.scrollLeft;
-        });
+        carousel.addEventListener('mousedown', (e) => { isDown = true; startX = e.pageX - carousel.offsetLeft; scrollLeft = carousel.scrollLeft; });
         carousel.addEventListener('mouseup', () => isDown = false);
         carousel.addEventListener('mousemove', (e) => {
             if (!isDown) return;
-            e.preventDefault();
             const x = e.pageX - carousel.offsetLeft;
-            const walk = (x - startX) * 2;
-            carousel.scrollLeft = scrollLeft - walk;
+            carousel.scrollLeft = scrollLeft - (x - startX) * 2;
         });
 
-        function openModal(card) {
-            const container = document.getElementById('modal-cards-container');
-            container.innerHTML = '';
-            document.getElementById('modal-text').style.display = 'block';
-            document.getElementById('modal-title').innerText = card.querySelector('h2').innerText;
-            document.getElementById('modal-text').innerText = card.querySelector('p').innerText;
-            document.getElementById('modal-overlay').classList.add('active');
-            document.body.style.overflow = 'hidden';
+        function handleCardClick(card) {
+            const state = card.getAttribute('data-state');
+            if (state === "deck") {
+                const currentActive = document.querySelector('.story-card[data-state="active"]');
+                if (currentActive) currentActive.setAttribute('data-state', 'deck');
+                card.setAttribute('data-state', 'active');
+            } else {
+                card.setAttribute('data-state', 'deck');
+            }
         }
 
-        function openGanttModal(fase) {
-            const title = document.getElementById('modal-title');
-            const text = document.getElementById('modal-text');
-            const container = document.getElementById('modal-cards-container');
-            
-            title.innerText = "Registros: " + fase;
-            text.style.display = 'none';
-            container.innerHTML = '';
-
-            const allCards = document.querySelectorAll('.log-card');
-            allCards.forEach(card => {
-                if(card.getAttribute('data-fase') === fase) {
-                    const clone = card.cloneNode(true);
-                    clone.onclick = null; 
-                    clone.style.minWidth = 'auto'; 
-                    clone.style.transform = 'none';
-                    container.appendChild(clone);
-                }
-            });
-
+        function openModal(card) {
+            document.getElementById('modal-title').innerText = card.querySelector('h2').innerText;
+            document.getElementById('modal-text').innerText = card.querySelector('p').innerText;
             document.getElementById('modal-overlay').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
@@ -557,10 +443,18 @@
             document.body.style.overflow = 'auto';
         }
 
-        // Detectar se é mobile para ajustar instrução
-        if (window.innerWidth <= 768) {
-            document.querySelector('.instrucao-mobile').style.display = 'block';
-            document.querySelector('.instrucao-desktop').style.display = 'none';
+        function openGanttModal(fase) {
+            const container = document.getElementById('modal-cards-container');
+            container.innerHTML = '';
+            document.querySelectorAll('.log-card').forEach(card => {
+                if(card.getAttribute('data-fase') === fase) {
+                    const clone = card.cloneNode(true);
+                    clone.onclick = null;
+                    container.appendChild(clone);
+                }
+            });
+            document.getElementById('modal-title').innerText = "Registros: " + fase;
+            document.getElementById('modal-overlay').classList.add('active');
         }
     </script>
 </body>
