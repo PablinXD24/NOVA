@@ -153,7 +153,7 @@
         .log-card p { font-size: 0.9rem; line-height: 1.6; color: rgba(255,255,255,0.6); flex-grow: 1; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; }
         .card-footer { margin-top: 20px; font-size: 0.75rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px; opacity: 0.5; }
 
-        /* --- GANTT CHART (CORRIGIDO) --- */
+        /* --- GANTT CHART (ESTILIZADO) --- */
         .gantt-wrapper {
             width: 95%;
             max-width: 1000px;
@@ -161,32 +161,32 @@
             backdrop-filter: blur(40px);
             border: 1.5px solid var(--glass-border);
             border-radius: 24px;
-            padding: 25px;
+            padding: 30px;
             overflow-x: auto;
         }
 
-        .gantt-container { min-width: 500px; display: flex; flex-direction: column; gap: 20px; }
-        .gantt-header { display: flex; border-bottom: 1px solid var(--glass-border); padding-bottom: 15px; margin-bottom: 5px; }
-        .gantt-col-label { flex: 1; font-size: 0.65rem; opacity: 0.5; text-align: center; text-transform: uppercase; letter-spacing: 2px; }
-        .gantt-row { display: flex; align-items: center; height: 30px; position: relative; }
-        .gantt-task-name { width: 100px; font-size: 0.75rem; opacity: 0.9; font-weight: 300; letter-spacing: 1px; }
-        .gantt-bar-area { flex: 1; position: relative; height: 100%; background: rgba(255,255,255,0.05); border-radius: 50px; overflow: hidden; }
+        .gantt-container { min-width: 550px; display: flex; flex-direction: column; gap: 20px; }
+        .gantt-header { display: flex; border-bottom: 1px solid var(--glass-border); padding-bottom: 15px; margin-bottom: 10px; }
+        .gantt-col-label { flex: 1; font-size: 0.7rem; opacity: 0.4; text-align: center; text-transform: uppercase; letter-spacing: 3px; }
+        .gantt-row { display: flex; align-items: center; height: 35px; position: relative; }
+        .gantt-task-name { width: 110px; font-size: 0.75rem; opacity: 0.8; font-weight: 300; letter-spacing: 1px; }
+        .gantt-bar-area { flex: 1; position: relative; height: 14px; background: rgba(255,255,255,0.03); border-radius: 20px; }
         
         .gantt-bar {
             position: absolute;
             height: 100%;
             top: 0;
-            border-radius: 50px;
-            background: var(--bar-color); /* Cor principal */
-            box-shadow: 0 0 15px var(--bar-color); /* Glow visível */
-            opacity: 0.9;
-            transition: all 0.3s ease;
+            border-radius: 20px;
+            background: var(--bar-color);
+            box-shadow: 0 0 15px var(--bar-color);
+            opacity: 0.85;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             cursor: pointer !important;
-            z-index: 10;
+            z-index: 5;
         }
-        .gantt-bar:hover { opacity: 1; transform: scaleY(1.1); filter: brightness(1.2); }
+        .gantt-bar:hover { opacity: 1; transform: scaleY(1.3); filter: brightness(1.2); }
 
-        /* --- SEÇÃO SOBRE (UNO STYLE) --- */
+        /* --- SEÇÃO SOBRE --- */
         .sobre-container {
             width: 100%;
             height: 550px;
@@ -249,7 +249,7 @@
 
         .glass-card-simple { background: var(--glass-bg); backdrop-filter: blur(45px) saturate(210%); border: 1.5px solid var(--glass-border); border-radius: 28px; padding: 40px; width: 90%; max-width: 450px; text-align: center; }
 
-        /* --- RESPONSIVIDADE MOBILE --- */
+        /* --- RESPONSIVIDADE --- */
         @media (max-width: 768px) {
             * { cursor: auto !important; }
             #custom-cursor { display: none; }
@@ -314,31 +314,31 @@
                     <div class="log-card card-1" onclick="openModal(this)" data-fase="Fase 01">
                         <div class="card-header"><span>27 Fev</span><span class="card-fase">Fase 01</span></div>
                         <h2>Estrutura Base</h2>
-                        <p>Desenvolvimento inicial com Liquid Glass e gradientes atmosféricos.</p>
+                        <p>Desenvolvimento inicial com Liquid Glass e gradientes atmosféricos para criar profundidade visual.</p>
                         <div class="card-footer">Autor: Pablo</div>
                     </div>
                     <div class="log-card card-2" onclick="openModal(this)" data-fase="Fase 02">
                         <div class="card-header"><span>01 Mar</span><span class="card-fase">Fase 02</span></div>
                         <h2>Navegação</h2>
-                        <p>Implementação do sistema de abas e cursor customizado.</p>
+                        <p>Implementação do sistema de abas e cursor customizado com rastro luminoso.</p>
                         <div class="card-footer">Autor: Pablo</div>
                     </div>
                     <div class="log-card card-3" onclick="openModal(this)" data-fase="Fase 03">
                         <div class="card-header"><span>05 Mar</span><span class="card-fase">Fase 03</span></div>
                         <h2>Dinâmica</h2>
-                        <p>Carrossel infinito com arraste manual e auto-scroll.</p>
+                        <p>Carrossel infinito com arraste manual, auto-scroll e transições suaves entre cards.</p>
                         <div class="card-footer">Autor: Pablo</div>
                     </div>
                     <div class="log-card card-4" onclick="openModal(this)" data-fase="Fase 04">
                         <div class="card-header"><span>10 Mar</span><span class="card-fase">Fase 04</span></div>
                         <h2>Glow System</h2>
-                        <p>Efeitos de iluminação profunda baseados na paleta cromática.</p>
+                        <p>Efeitos de iluminação profunda baseados na paleta cromática selecionada para o projeto.</p>
                         <div class="card-footer">Autor: Pablo</div>
                     </div>
                     <div class="log-card card-5" onclick="openModal(this)" data-fase="Fase 05">
                         <div class="card-header"><span>15 Mar</span><span class="card-fase">Fase 05</span></div>
                         <h2>Finalização</h2>
-                        <p>Ajustes de performance e refinamento da transparência gradual.</p>
+                        <p>Ajustes de performance, responsividade total e refinamento da transparência gradual.</p>
                         <div class="card-footer">Autor: Pablo</div>
                     </div>
                 </div>
@@ -350,32 +350,17 @@
             <div class="gantt-wrapper">
                 <div class="gantt-container">
                     <div class="gantt-header">
-                        <div style="width: 100px;"></div>
-                        <div class="gantt-col-label">S1</div>
-                        <div class="gantt-col-label">S2</div>
-                        <div class="gantt-col-label">S3</div>
-                        <div class="gantt-col-label">S4</div>
+                        <div style="width: 110px;"></div>
+                        <div class="gantt-col-label">SEM 1</div>
+                        <div class="gantt-col-label">SEM 2</div>
+                        <div class="gantt-col-label">SEM 3</div>
+                        <div class="gantt-col-label">SEM 4</div>
                     </div>
-                    <div class="gantt-row">
-                        <div class="gantt-task-name">UI/UX</div>
-                        <div class="gantt-bar-area"><div class="gantt-bar" onclick="openGanttModal('Fase 01')" style="width: 25%; left: 0%; --bar-color: #2C5067;"></div></div>
-                    </div>
-                    <div class="gantt-row">
-                        <div class="gantt-task-name">Engine</div>
-                        <div class="gantt-bar-area"><div class="gantt-bar" onclick="openGanttModal('Fase 02')" style="width: 40%; left: 15%; --bar-color: #3BA6A6;"></div></div>
-                    </div>
-                    <div class="gantt-row">
-                        <div class="gantt-task-name">Data</div>
-                        <div class="gantt-bar-area"><div class="gantt-bar" onclick="openGanttModal('Fase 03')" style="width: 30%; left: 45%; --bar-color: #50BF58;"></div></div>
-                    </div>
-                    <div class="gantt-row">
-                        <div class="gantt-task-name">Testing</div>
-                        <div class="gantt-bar-area"><div class="gantt-bar" onclick="openGanttModal('Fase 04')" style="width: 20%; left: 70%; --bar-color: #F2CA52;"></div></div>
-                    </div>
-                    <div class="gantt-row">
-                        <div class="gantt-task-name">Deploy</div>
-                        <div class="gantt-bar-area"><div class="gantt-bar" onclick="openGanttModal('Fase 05')" style="width: 10%; left: 90%; --bar-color: #F23839;"></div></div>
-                    </div>
+                    <div class="gantt-row"><div class="gantt-task-name">UI/UX</div><div class="gantt-bar-area"><div class="gantt-bar" onclick="openGanttModal('Fase 01')" style="width: 25%; left: 0%; --bar-color: var(--color-1);"></div></div></div>
+                    <div class="gantt-row"><div class="gantt-task-name">ENGINE</div><div class="gantt-bar-area"><div class="gantt-bar" onclick="openGanttModal('Fase 02')" style="width: 40%; left: 15%; --bar-color: var(--color-2);"></div></div></div>
+                    <div class="gantt-row"><div class="gantt-task-name">DATA</div><div class="gantt-bar-area"><div class="gantt-bar" onclick="openGanttModal('Fase 03')" style="width: 30%; left: 45%; --bar-color: var(--color-3);"></div></div></div>
+                    <div class="gantt-row"><div class="gantt-task-name">TESTS</div><div class="gantt-bar-area"><div class="gantt-bar" onclick="openGanttModal('Fase 04')" style="width: 20%; left: 70%; --bar-color: var(--color-4);"></div></div></div>
+                    <div class="gantt-row"><div class="gantt-task-name">DEPLOY</div><div class="gantt-bar-area"><div class="gantt-bar" onclick="openGanttModal('Fase 05')" style="width: 10%; left: 90%; --bar-color: var(--color-5);"></div></div></div>
                 </div>
             </div>
         </section>
@@ -414,6 +399,7 @@
         let startX, scrollLeft;
         let autoScrollActive = true;
 
+        // CURSOR
         document.addEventListener('mousemove', (e) => {
             if (window.innerWidth > 768) {
                 cursor.style.left = e.clientX + 'px';
@@ -421,17 +407,32 @@
             }
         });
 
+        // CARROSSEL AUTOMÁTICO (CORREÇÃO PC E MOBILE)
         function autoScroll() {
             if (autoScrollActive && !isDown) {
-                carousel.scrollLeft += 0.5;
-                if (carousel.scrollLeft >= (carousel.scrollWidth - carousel.clientWidth - 1)) carousel.scrollLeft = 0;
+                carousel.scrollLeft += 0.8; // Velocidade do auto-scroll
+                if (carousel.scrollLeft >= (carousel.scrollWidth - carousel.clientWidth - 1)) {
+                    carousel.scrollLeft = 0;
+                }
             }
         }
-        setInterval(autoScroll, 30);
+        let scrollInterval = setInterval(autoScroll, 20);
 
-        carousel.addEventListener('mousedown', (e) => { isDown = true; startX = e.pageX - carousel.offsetLeft; scrollLeft = carousel.scrollLeft; });
-        carousel.addEventListener('mouseleave', () => isDown = false);
-        carousel.addEventListener('mouseup', () => isDown = false);
+        // Pausa ao interagir
+        carousel.addEventListener('mouseenter', () => autoScrollActive = false);
+        carousel.addEventListener('mouseleave', () => { if(!isDown) autoScrollActive = true; });
+
+        // Arraste manual
+        carousel.addEventListener('mousedown', (e) => { 
+            isDown = true; 
+            autoScrollActive = false;
+            startX = e.pageX - carousel.offsetLeft; 
+            scrollLeft = carousel.scrollLeft; 
+        });
+        carousel.addEventListener('mouseup', () => { 
+            isDown = false; 
+            autoScrollActive = true;
+        });
         carousel.addEventListener('mousemove', (e) => {
             if (!isDown) return;
             e.preventDefault();
@@ -440,6 +441,7 @@
             carousel.scrollLeft = scrollLeft - walk;
         });
 
+        // DECK DE CARTAS
         function handleCardClick(card) {
             const state = card.getAttribute('data-state');
             if (state === "deck") {
@@ -451,17 +453,20 @@
             }
         }
 
+        // MODAIS
         function openModal(card) {
             document.getElementById('modal-title').innerText = card.querySelector('h2').innerText;
             document.getElementById('modal-text').innerText = card.querySelector('p').innerText;
             document.getElementById('modal-cards-container').innerHTML = '';
             document.getElementById('modal-overlay').classList.add('active');
             document.body.style.overflow = 'hidden';
+            autoScrollActive = false;
         }
 
         function closeModal() {
             document.getElementById('modal-overlay').classList.remove('active');
             document.body.style.overflow = 'auto';
+            autoScrollActive = true;
         }
 
         function openGanttModal(fase) {
@@ -474,9 +479,10 @@
                     container.appendChild(clone);
                 }
             });
-            document.getElementById('modal-title').innerText = "Registros: " + fase;
-            document.getElementById('modal-text').innerText = "";
+            document.getElementById('modal-title').innerText = "Linha do Tempo: " + fase;
+            document.getElementById('modal-text').innerText = "Registros detalhados desta etapa do projeto.";
             document.getElementById('modal-overlay').classList.add('active');
+            autoScrollActive = false;
         }
     </script>
 </body>
