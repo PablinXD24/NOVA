@@ -78,7 +78,7 @@
             justify-content: center;
             position: relative;
             padding: 80px 20px;
-            opacity: 0; 
+            opacity: 0;
             transform: translateY(30px);
             transition: opacity 1.2s ease, transform 1.2s ease;
         }
@@ -195,7 +195,7 @@
         }
         .gantt-bar:hover { opacity: 1; transform: scaleY(1.3); filter: brightness(1.2); }
 
-        /* --- SEÇÃO SOBRE (Ajustada para Imagens) --- */
+        /* --- SEÇÃO SOBRE --- */
         .sobre-container {
             width: 100%;
             height: 550px;
@@ -228,26 +228,25 @@
             transform-origin: center bottom;
         }
 
-        /* Garante que a imagem preencha o card */
         .story-card img { 
             width: 100%; 
             height: 100%; 
             object-fit: cover; 
             pointer-events: none;
-            display: block;
+            display: block; /* Garante que a imagem renderize */
         }
 
-        .story-card[data-state="deck"]:nth-child(1) { transform: rotate(-6deg); z-index: 5; }
-        .story-card[data-state="deck"]:nth-child(2) { transform: rotate(-3deg); z-index: 4; }
+        .story-card[data-state="deck"]:nth-child(1) { transform: rotate(-3deg); z-index: 5; }
+        .story-card[data-state="deck"]:nth-child(2) { transform: rotate(-1.5deg); z-index: 4; }
         .story-card[data-state="deck"]:nth-child(3) { transform: rotate(0deg); z-index: 3; }
-        .story-card[data-state="deck"]:nth-child(4) { transform: rotate(3deg); z-index: 2; }
-        .story-card[data-state="deck"]:nth-child(5) { transform: rotate(6deg); z-index: 1; }
+        .story-card[data-state="deck"]:nth-child(4) { transform: rotate(1.5deg); z-index: 2; }
+        .story-card[data-state="deck"]:nth-child(5) { transform: rotate(3deg); z-index: 1; }
 
-        .story-deck:hover .story-card[data-state="deck"]:nth-child(1) { transform: translateX(-120px) rotate(-15deg); }
-        .story-deck:hover .story-card[data-state="deck"]:nth-child(2) { transform: translateX(-60px) rotate(-7deg); }
+        .story-deck:hover .story-card[data-state="deck"]:nth-child(1) { transform: translateX(-100px) rotate(-15deg); }
+        .story-deck:hover .story-card[data-state="deck"]:nth-child(2) { transform: translateX(-50px) rotate(-7deg); }
         .story-deck:hover .story-card[data-state="deck"]:nth-child(3) { transform: translateX(0px) rotate(0deg); }
-        .story-deck:hover .story-card[data-state="deck"]:nth-child(4) { transform: translateX(60px) rotate(7deg); }
-        .story-deck:hover .story-card[data-state="deck"]:nth-child(5) { transform: translateX(120px) rotate(15deg); }
+        .story-deck:hover .story-card[data-state="deck"]:nth-child(4) { transform: translateX(50px) rotate(7deg); }
+        .story-deck:hover .story-card[data-state="deck"]:nth-child(5) { transform: translateX(100px) rotate(15deg); }
 
         .story-card[data-state="active"] {
             transform: translateY(-260px) scale(1.1) rotate(0deg) !important;
@@ -386,7 +385,7 @@
     <div class="content-wrapper">
         <section id="home">
             <div class="logo-container">
-                <img src="novalogo.png" alt="Logo Nova">
+                <img src="./novalogo" alt="NOVA">
             </div>
             <svg class="scroll-star-static" viewBox="0 0 24 24">
                 <path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z" />
@@ -455,11 +454,11 @@
             <h2 style="margin-bottom: 50px; font-weight: 200; letter-spacing: 5px; text-align: center;">SOBRE O NOVA</h2>
             <div class="sobre-container">
                 <div class="story-deck" id="story-deck">
-                    <div class="story-card" data-state="deck" onclick="handleCardClick(this)"><img src="adriana" alt="Adriana"></div>
-                    <div class="story-card" data-state="deck" onclick="handleCardClick(this)"><img src="bianca" alt="Bianca"></div>
-                    <div class="story-card" data-state="deck" onclick="handleCardClick(this)"><img src="dante" alt="Dante"></div>
-                    <div class="story-card" data-state="deck" onclick="handleCardClick(this)"><img src="joao" alt="João"></div>
-                    <div class="story-card" data-state="deck" onclick="handleCardClick(this)"><img src="pablo" alt="Pablo"></div>
+                    <div class="story-card" data-state="deck" onclick="handleCardClick(this)"><img src="./adriana" alt="Adriana"></div>
+                    <div class="story-card" data-state="deck" onclick="handleCardClick(this)"><img src="./bianca" alt="Bianca"></div>
+                    <div class="story-card" data-state="deck" onclick="handleCardClick(this)"><img src="./dante" alt="Dante"></div>
+                    <div class="story-card" data-state="deck" onclick="handleCardClick(this)"><img src="./joao" alt="João"></div>
+                    <div class="story-card" data-state="deck" onclick="handleCardClick(this)"><img src="./pablo" alt="Pablo"></div>
                 </div>
             </div>
         </section>
@@ -493,8 +492,9 @@
         let startX, scrollLeft;
         let autoScrollActive = true;
 
-        const imgExterna = "bannerext.png";
-        const imgInterna = "bannerint.png";
+        // Referenciando os banners sem extensão
+        const imgExterna = "bannerext";
+        const imgInterna = "bannerint";
 
         const observerOptions = { threshold: 0.2 };
         const sectionObserver = new IntersectionObserver((entries) => {
