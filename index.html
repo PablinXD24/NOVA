@@ -180,7 +180,7 @@
             padding: 30px;
         }
 
-        .gantt-container { min-width: 100%; display: flex; flex-direction: column; gap: 20px; }
+        .gantt-container { width: 100%; display: flex; flex-direction: column; gap: 20px; }
         .gantt-header { display: flex; border-bottom: 1px solid var(--glass-border); padding-bottom: 15px; margin-bottom: 10px; }
         .gantt-col-label { flex: 1; font-size: 0.7rem; opacity: 0.4; text-align: center; text-transform: uppercase; letter-spacing: 3px; }
         .gantt-row { display: flex; align-items: center; height: 35px; position: relative; }
@@ -392,7 +392,7 @@
 
         .modal-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; margin-top: 20px; justify-items: center; }
 
-        /* --- RESPONSIVIDADE --- */
+        /* --- RESPONSIVIDADE ATUALIZADA --- */
         @media (max-width: 768px) {
             * { cursor: auto !important; }
             #custom-cursor { display: none; }
@@ -418,57 +418,10 @@
 
             .logo-container {
                 margin-bottom: 20px;
-                display: flex;
-                justify-content: center;
-                width: 100%;
             }
             .logo-container img { 
                 width: 320px; 
                 max-width: 85%;
-            }
-
-            /* --- GANTT MOBILE (ESTILO TIMELINE VERTICAL) --- */
-            .gantt-wrapper {
-                background: transparent;
-                border: none;
-                padding: 0;
-            }
-            .gantt-header { display: none; }
-            .gantt-container { 
-                gap: 15px; 
-                padding: 10px;
-            }
-            .gantt-row {
-                flex-direction: column;
-                align-items: flex-start;
-                height: auto;
-                background: var(--glass-bg);
-                border: 1px solid var(--glass-border);
-                border-radius: 15px;
-                padding: 15px;
-                position: relative;
-                width: 100%;
-                backdrop-filter: blur(10px);
-            }
-            .gantt-task-name {
-                width: 100%;
-                margin-bottom: 8px;
-                font-size: 0.85rem;
-                font-weight: 500;
-                text-transform: uppercase;
-                letter-spacing: 2px;
-            }
-            .gantt-bar-area {
-                width: 100%;
-                height: 6px;
-                background: rgba(255,255,255,0.05);
-            }
-            .gantt-bar {
-                position: relative;
-                left: 0 !important;
-                width: 100% !important;
-                height: 100%;
-                border-radius: 10px;
             }
 
             .carousel-container {
@@ -479,6 +432,39 @@
                 min-width: 280px;
                 width: 85vw;
                 height: 400px;
+            }
+
+            /* --- NOVA REPRESENTAÇÃO GANTT NO MOBILE --- */
+            .gantt-wrapper {
+                width: 100%;
+                padding: 25px 20px;
+                border-radius: 20px;
+            }
+            .gantt-header { display: none; } /* Esconde colunas de semanas */
+            .gantt-container { gap: 25px; }
+            .gantt-row { 
+                flex-direction: column; 
+                align-items: flex-start; 
+                height: auto; 
+                gap: 8px;
+            }
+            .gantt-task-name { 
+                width: 100%; 
+                font-size: 0.8rem; 
+                opacity: 1; 
+                font-weight: 500;
+                color: var(--accent-color);
+            }
+            .gantt-bar-area { 
+                width: 100%; 
+                height: 12px; 
+                background: rgba(255,255,255,0.08);
+            }
+            .gantt-bar {
+                position: relative; /* Muda de absoluta para relativa para preencher a área */
+                left: 0 !important; /* Ignora o deslocamento horizontal no mobile */
+                height: 100%;
+                transition: width 1s ease;
             }
 
             .story-deck {
@@ -616,11 +602,36 @@
                         <div class="gantt-col-label">SEM 3</div>
                         <div class="gantt-col-label">SEM 4</div>
                     </div>
-                    <div class="gantt-row"><div class="gantt-task-name">UI/UX</div><div class="gantt-bar-area"><div class="gantt-bar" onclick="openGanttModal('Fase 01')" style="width: 25%; left: 0%; --bar-color: var(--color-1);"></div></div></div>
-                    <div class="gantt-row"><div class="gantt-task-name">ENGINE</div><div class="gantt-bar-area"><div class="gantt-bar" onclick="openGanttModal('Fase 02')" style="width: 40%; left: 15%; --bar-color: var(--color-2);"></div></div></div>
-                    <div class="gantt-row"><div class="gantt-task-name">DATA</div><div class="gantt-bar-area"><div class="gantt-bar" onclick="openGanttModal('Fase 03')" style="width: 30%; left: 45%; --bar-color: var(--color-3);"></div></div></div>
-                    <div class="gantt-row"><div class="gantt-task-name">TESTS</div><div class="gantt-bar-area"><div class="gantt-bar" onclick="openGanttModal('Fase 04')" style="width: 20%; left: 70%; --bar-color: var(--color-4);"></div></div></div>
-                    <div class="gantt-row"><div class="gantt-task-name">DEPLOY</div><div class="gantt-bar-area"><div class="gantt-bar" onclick="openGanttModal('Fase 05')" style="width: 10%; left: 90%; --bar-color: var(--color-5);"></div></div></div>
+                    <div class="gantt-row">
+                        <div class="gantt-task-name">UI/UX</div>
+                        <div class="gantt-bar-area">
+                            <div class="gantt-bar" onclick="openGanttModal('Fase 01')" style="width: 25%; left: 0%; --bar-color: var(--color-1);"></div>
+                        </div>
+                    </div>
+                    <div class="gantt-row">
+                        <div class="gantt-task-name">ENGINE</div>
+                        <div class="gantt-bar-area">
+                            <div class="gantt-bar" onclick="openGanttModal('Fase 02')" style="width: 40%; left: 15%; --bar-color: var(--color-2);"></div>
+                        </div>
+                    </div>
+                    <div class="gantt-row">
+                        <div class="gantt-task-name">DATA</div>
+                        <div class="gantt-bar-area">
+                            <div class="gantt-bar" onclick="openGanttModal('Fase 03')" style="width: 30%; left: 45%; --bar-color: var(--color-3);"></div>
+                        </div>
+                    </div>
+                    <div class="gantt-row">
+                        <div class="gantt-task-name">TESTS</div>
+                        <div class="gantt-bar-area">
+                            <div class="gantt-bar" onclick="openGanttModal('Fase 04')" style="width: 20%; left: 70%; --bar-color: var(--color-4);"></div>
+                        </div>
+                    </div>
+                    <div class="gantt-row">
+                        <div class="gantt-task-name">DEPLOY</div>
+                        <div class="gantt-bar-area">
+                            <div class="gantt-bar" onclick="openGanttModal('Fase 05')" style="width: 10%; left: 90%; --bar-color: var(--color-5);"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
