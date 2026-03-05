@@ -228,12 +228,13 @@
             transform-origin: center bottom;
         }
 
-        .story-card img { 
-            width: 100%; 
-            height: 100%; 
-            object-fit: cover; 
+        /* AJUSTE PARA IMAGENS OCUPAREM O CARD TODO */
+        .story-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
             pointer-events: none;
-            display: block; /* Garante que a imagem renderize */
+            display: block;
         }
 
         .story-card[data-state="deck"]:nth-child(1) { transform: rotate(-3deg); z-index: 5; }
@@ -492,9 +493,9 @@
         let startX, scrollLeft;
         let autoScrollActive = true;
 
-        // Referenciando os banners sem extensão
-        const imgExterna = "bannerext";
-        const imgInterna = "bannerint";
+        // Referenciando banners (sem extensão conforme solicitado)
+        const imgExterna = "./bannerext"; 
+        const imgInterna = "./bannerint";
 
         const observerOptions = { threshold: 0.2 };
         const sectionObserver = new IntersectionObserver((entries) => {
