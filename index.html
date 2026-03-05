@@ -198,13 +198,11 @@
         /* --- SEÇÃO SOBRE --- */
         .sobre-container {
             width: 100%;
-            height: 550px;
             display: flex;
             flex-direction: column;
-            justify-content: flex-end;
             align-items: center;
             position: relative;
-            padding-bottom: 60px;
+            gap: 40px;
         }
 
         .story-deck {
@@ -212,6 +210,7 @@
             width: 240px;
             height: 340px;
             perspective: 1000px;
+            margin-bottom: 40px;
         }
 
         .story-card {
@@ -253,6 +252,48 @@
             z-index: 100;
             box-shadow: 0 30px 60px rgba(0,0,0,0.8), 0 0 25px rgba(255,255,255,0.2);
             border-color: #fff;
+        }
+
+        /* --- IMAGENS FLUTUANTES --- */
+        .floating-images-container {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        .floating-img-wrapper {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%; /* Carinha redonda */
+            overflow: hidden;
+            border: 2px solid var(--glass-border);
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            animation: swing-random var(--duration, 4s) ease-in-out infinite alternate;
+            animation-delay: var(--delay, 0s);
+            transition: all 0.3s ease;
+        }
+
+        .floating-img-wrapper:hover {
+            border-color: #fff;
+            transform: scale(1.1);
+        }
+
+        .floating-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+        
+        .floating-img-wrapper:hover img { opacity: 1; }
+
+        @keyframes swing-random {
+            0% { transform: rotate(-8deg) translateY(0px); }
+            100% { transform: rotate(8deg) translateY(-10px); }
         }
 
         /* --- ANEL 3D --- */
@@ -330,10 +371,21 @@
 
         /* --- MODAL --- */
         #modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); z-index: 2000; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; padding: 20px; }
-        .modal-content { background: var(--glass-bg); backdrop-filter: blur(50px) saturate(200%); border: 1.5px solid var(--glass-border); padding: 30px; border-radius: 32px; max-width: 800px; width: 100%; max-height: 85vh; overflow-y: auto; transform: scale(0.9); transition: transform 0.3s ease; }
+        .modal-content { background: var(--glass-bg); backdrop-filter: blur(50px) saturate(200%); border: 1.5px solid var(--glass-border); padding: 40px; border-radius: 32px; max-width: 600px; width: 100%; max-height: 85vh; overflow-y: auto; transform: scale(0.9); transition: transform 0.3s ease; text-align: center; }
         #modal-overlay.active { display: flex; opacity: 1; }
         #modal-overlay.active .modal-content { transform: scale(1); }
         .modal-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; margin-top: 20px; justify-items: center; }
+
+        .modal-portrait {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            border: 2px solid #fff;
+            overflow: hidden;
+            animation: swing-random 4s ease-in-out infinite alternate;
+        }
+        .modal-portrait img { width: 100%; height: 100%; object-fit: cover; }
 
         /* --- RESPONSIVIDADE --- */
         @media (max-width: 768px) {
@@ -344,6 +396,8 @@
             .nav-label { display: none; }
             section { padding: 40px 10px; }
             .logo-container img { width: 280px; }
+            .floating-images-container { gap: 15px; flex-wrap: wrap; }
+            .floating-img-wrapper { width: 70px; height: 70px; }
             .contact-3d-scene { height: 500px; }
             .ring-face { height: 280px; width: 50px; margin-left: -25px; margin-top: -140px; background-size: 1800px 100%; }
             .ring-face::before { background-size: 1800px 100%; }
@@ -460,6 +514,26 @@
                     <div class="story-card" data-state="deck" onclick="handleCardClick(this)"><img src="joao.png" alt="João"></div>
                     <div class="story-card" data-state="deck" onclick="handleCardClick(this)"><img src="pablo.png" alt="Pablo"></div>
                 </div>
+
+                <h3 style="margin: 20px 0; font-weight: 200; letter-spacing: 4px; text-transform: uppercase; font-size: 0.9rem; opacity: 0.8;">conheça os integrantes</h3>
+
+                <div class="floating-images-container">
+                    <div class="floating-img-wrapper" style="--delay: 0s; --duration: 3s;" onclick="openMemberModal('Adriana', 'adriana.png', 'Líder de Design e estrategista criativa da NOVA.')">
+                        <img src="adrianacab.png" alt="Adriana">
+                    </div>
+                    <div class="floating-img-wrapper" style="--delay: 0.5s; --duration: 4.2s;" onclick="openMemberModal('Bianca', 'bianca.png', 'Especialista em UI/UX e arquitetura de informação.')">
+                        <img src="biancacab.png" alt="Bianca">
+                    </div>
+                    <div class="floating-img-wrapper" style="--delay: 1.2s; --duration: 3.5s;" onclick="openMemberModal('Dante', 'dante.png', 'Desenvolvedor Full-stack focado em animações e performance.')">
+                        <img src="dantecab.png" alt="Dante">
+                    </div>
+                    <div class="floating-img-wrapper" style="--delay: 0.8s; --duration: 5s;" onclick="openMemberModal('João', 'joao.png', 'Engenheiro de dados e responsável pela lógica de backend.')">
+                        <img src="joaocab.png" alt="João">
+                    </div>
+                    <div class="floating-img-wrapper" style="--delay: 1.5s; --duration: 3.8s;" onclick="openMemberModal('Pablo', 'pablo.png', 'Fundador e Diretor de Arte, focado na estética minimalista.')">
+                        <img src="pablocab.png" alt="Pablo">
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -476,10 +550,18 @@
 
     <div id="modal-overlay" onclick="closeModal()">
         <div class="modal-content" onclick="event.stopPropagation()">
-            <h2 id="modal-title" style="margin-bottom: 20px; font-weight: 200; letter-spacing: 3px;"></h2>
-            <div id="modal-body">
-                <p id="modal-text" style="color: rgba(255,255,255,0.7); line-height: 1.8;"></p>
-                <div id="modal-cards-container" class="modal-grid"></div>
+            <div id="modal-member-view" style="display: none;">
+                <div class="modal-portrait"><img id="modal-member-img" src="" alt=""></div>
+                <h2 id="modal-member-name" style="margin-bottom: 10px; font-weight: 200; letter-spacing: 3px;"></h2>
+                <p id="modal-member-desc" style="color: rgba(255,255,255,0.7); line-height: 1.8;"></p>
+            </div>
+
+            <div id="modal-default-view">
+                <h2 id="modal-title" style="margin-bottom: 20px; font-weight: 200; letter-spacing: 3px;"></h2>
+                <div id="modal-body">
+                    <p id="modal-text" style="color: rgba(255,255,255,0.7); line-height: 1.8;"></p>
+                    <div id="modal-cards-container" class="modal-grid"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -492,7 +574,6 @@
         let startX, scrollLeft;
         let autoScrollActive = true;
 
-        // Banners sem caminho e sem extensão
         const imgExterna = "bannerext";
         const imgInterna = "bannerint";
 
@@ -579,12 +660,32 @@
             }
         }
 
+        // Funções de Modal
         function openModal(card) {
+            resetModalViews();
             document.getElementById('modal-cards-container').innerHTML = ''; 
             document.getElementById('modal-title').innerText = card.querySelector('h2').innerText;
             document.getElementById('modal-text').innerText = card.querySelector('p').innerText;
             document.getElementById('modal-overlay').classList.add('active');
             autoScrollActive = false;
+        }
+
+        function openMemberModal(name, imgSrc, desc) {
+            resetModalViews();
+            document.getElementById('modal-default-view').style.display = 'none';
+            document.getElementById('modal-member-view').style.display = 'block';
+            
+            document.getElementById('modal-member-name').innerText = name;
+            document.getElementById('modal-member-img').src = imgSrc;
+            document.getElementById('modal-member-desc').innerText = desc;
+            
+            document.getElementById('modal-overlay').classList.add('active');
+            autoScrollActive = false;
+        }
+
+        function resetModalViews() {
+            document.getElementById('modal-default-view').style.display = 'block';
+            document.getElementById('modal-member-view').style.display = 'none';
         }
 
         function closeModal() {
@@ -593,6 +694,7 @@
         }
 
         function openGanttModal(fase) {
+            resetModalViews();
             const container = document.getElementById('modal-cards-container');
             container.innerHTML = '';
             document.getElementById('modal-text').innerText = ''; 
