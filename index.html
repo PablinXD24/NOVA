@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NOVA</title>
+    <title>Black Parallax Experience</title>
     <style>
         :root {
             --glass-bg: rgba(15, 15, 15, 0.7);
@@ -228,11 +228,10 @@
             transform-origin: center bottom;
         }
 
-        /* AJUSTE PARA IMAGENS OCUPAREM O CARD TODO */
-        .story-card img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        .story-card img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
             pointer-events: none;
             display: block;
         }
@@ -386,7 +385,7 @@
     <div class="content-wrapper">
         <section id="home">
             <div class="logo-container">
-                <img src="./novalogo" alt="NOVA">
+                <img src="novalogo" alt="NOVA">
             </div>
             <svg class="scroll-star-static" viewBox="0 0 24 24">
                 <path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z" />
@@ -456,10 +455,10 @@
             <div class="sobre-container">
                 <div class="story-deck" id="story-deck">
                     <div class="story-card" data-state="deck" onclick="handleCardClick(this)"><img src="adriana" alt="Adriana"></div>
-                    <div class="story-card" data-state="deck" onclick="handleCardClick(this)"><img src="./bianca" alt="Bianca"></div>
-                    <div class="story-card" data-state="deck" onclick="handleCardClick(this)"><img src="./dante" alt="Dante"></div>
-                    <div class="story-card" data-state="deck" onclick="handleCardClick(this)"><img src="./joao" alt="João"></div>
-                    <div class="story-card" data-state="deck" onclick="handleCardClick(this)"><img src="./pablo" alt="Pablo"></div>
+                    <div class="story-card" data-state="deck" onclick="handleCardClick(this)"><img src="bianca" alt="Bianca"></div>
+                    <div class="story-card" data-state="deck" onclick="handleCardClick(this)"><img src="dante" alt="Dante"></div>
+                    <div class="story-card" data-state="deck" onclick="handleCardClick(this)"><img src="joao" alt="João"></div>
+                    <div class="story-card" data-state="deck" onclick="handleCardClick(this)"><img src="pablo" alt="Pablo"></div>
                 </div>
             </div>
         </section>
@@ -493,9 +492,9 @@
         let startX, scrollLeft;
         let autoScrollActive = true;
 
-        // Referenciando banners (sem extensão conforme solicitado)
-        const imgExterna = "./bannerext"; 
-        const imgInterna = "./bannerint";
+        // Banners sem caminho e sem extensão
+        const imgExterna = "bannerext";
+        const imgInterna = "bannerint";
 
         const observerOptions = { threshold: 0.2 };
         const sectionObserver = new IntersectionObserver((entries) => {
