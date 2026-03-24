@@ -400,15 +400,23 @@
 
     <script>
         // --- CONFIGURAÇÃO FIREBASE (Substitua pelos seus dados) ---
-        const firebaseConfig = {
-            apiKey: "SUA_API_KEY",
-            authDomain: "SEU_PROJETO.firebaseapp.com",
-            databaseURL: "https://SEU_PROJETO.firebaseio.com",
-            projectId: "SEU_PROJETO",
-            storageBucket: "SEU_PROJETO.appspot.com",
-            messagingSenderId: "ID",
-            appId: "APP_ID"
-        };
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyDpVftgpBYSoGPuAIDS_HlEs931_V9knAQ",
+  authDomain: "nova-9f394.firebaseapp.com",
+  projectId: "nova-9f394",
+  storageBucket: "nova-9f394.firebasestorage.app",
+  messagingSenderId: "510268851568",
+  appId: "1:510268851568:web:6742366633b39666503bb5"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
         
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
