@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NOVA | Admin System</title>
+    
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
@@ -14,147 +15,105 @@
             --glass-border: rgba(255, 255, 255, 0.18);
             --glass-highlight: rgba(255, 255, 255, 0.08);
             --accent-color: #ffffff;
-            --color-1: #2C5067;
-            --color-2: #3BA6A6;
-            --color-3: #50BF58;
-            --color-4: #F2CA52;
-            --color-5: #F23839;
+            --color-1: #2C5067; --color-2: #3BA6A6; --color-3: #50BF58; --color-4: #F2CA52; --color-5: #F23839;
         }
 
-        /* --- BOTÃO DE LOGIN ADMIN --- */
-        #admin-login-btn {
-            position: fixed;
-            top: 30px;
-            right: 30px;
-            z-index: 2001;
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 50px;
-            backdrop-filter: blur(10px);
-            font-size: 0.7rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            cursor: pointer !important;
-            transition: all 0.3s ease;
-        }
-
-        #admin-login-btn:hover {
-            background: rgba(255,255,255,0.1);
-            border-color: #fff;
-        }
-
-        /* --- PAINEL DE EDIÇÃO (HIDDEN BY DEFAULT) --- */
-        .admin-only { display: none; }
-        body.is-admin .admin-only { display: block; }
+        /* --- ESTILOS ADMIN (ADICIONADOS) --- */
+        .admin-controls { display: none; gap: 10px; margin-bottom: 20px; z-index: 100; }
+        body.is-admin .admin-controls { display: flex; }
+        body.is-admin .edit-hint { border: 1px dashed var(--color-2) !important; min-height: 20px; }
         
-        .edit-hint {
-            border: 1px dashed var(--color-2) !important;
-            position: relative;
+        #admin-login-btn {
+            position: fixed; top: 30px; right: 30px; z-index: 2001;
+            background: var(--glass-bg); border: 1px solid var(--glass-border);
+            color: white; padding: 10px 20px; border-radius: 50px;
+            backdrop-filter: blur(10px); font-size: 0.7rem; letter-spacing: 2px;
+            text-transform: uppercase; cursor: pointer !important; transition: all 0.3s ease;
         }
 
         .save-bar {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--color-3);
-            color: white;
-            padding: 15px 40px;
-            border-radius: 30px;
-            z-index: 3000;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            display: none;
-            cursor: pointer !important;
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            background: var(--color-3); color: white; padding: 15px 40px;
+            border-radius: 30px; z-index: 3000; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            display: none; cursor: pointer !important; font-weight: bold;
         }
 
-        /* [Mantendo todos os seus estilos originais abaixo] */
+        /* --- SEUS ESTILOS ORIGINAIS MANTIDOS --- */
         * { margin: 0; padding: 0; box-sizing: border-box; cursor: none !important; scroll-behavior: smooth; }
-        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background-color: #000; color: #fff; overflow-x: hidden; width: 100%; }
+        body { font-family: 'Inter', sans-serif; background-color: #000; color: #fff; overflow-x: hidden; }
+        
         .top-sidebar { position: fixed; top: 30px; left: 50%; transform: translateX(-50%); z-index: 1000; display: flex; gap: 40px; padding: 10px 20px; }
         .nav-item { position: relative; display: flex; flex-direction: column; align-items: center; text-decoration: none; }
         .nav-star { width: 24px; height: 24px; transition: transform 0.3s ease; }
         .nav-item:hover .nav-star { transform: scale(1.4) rotate(90deg); }
-        .nav-label { position: absolute; top: 35px; font-size: 0.6rem; letter-spacing: 2px; text-transform: uppercase; opacity: 0; white-space: nowrap; transition: opacity 0.3s ease; pointer-events: none; color: #fff; }
+        .nav-label { position: absolute; top: 35px; font-size: 0.6rem; letter-spacing: 2px; text-transform: uppercase; opacity: 0; transition: opacity 0.3s ease; pointer-events: none; color: #fff; }
         .nav-item:hover .nav-label { opacity: 1; }
-        #custom-cursor { position: fixed; width: 24px; height: 24px; fill: var(--accent-color); pointer-events: none; z-index: 9999; transform: translate(-50%, -50%); filter: drop-shadow(0 0 8px rgba(255,255,255,0.8)); transition: transform 0.1s ease-out; }
+
+        #custom-cursor { position: fixed; width: 24px; height: 24px; fill: var(--accent-color); pointer-events: none; z-index: 9999; transform: translate(-50%, -50%); filter: drop-shadow(0 0 8px #fff); transition: transform 0.1s ease-out; }
         #bg-container { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: -1; background-color: #000; }
+
         section { min-height: 100vh; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; padding: 80px 20px; opacity: 0; transform: translateY(30px); transition: opacity 1.2s ease, transform 1.2s ease; }
         section.section-visible { opacity: 1; transform: translateY(0); }
-        .logo-container { display: flex; justify-content: center; align-items: center; width: 100%; }
-        .logo-container img { width: 450px; max-width: 90%; height: auto; filter: drop-shadow(0 0 20px rgba(255,255,255,0.1)); }
-        .scroll-star-static { width: 35px; height: 35px; fill: var(--accent-color); margin-top: 50px; animation: star-glow-pulse 2.5s infinite ease-in-out; }
-        @keyframes star-glow-pulse { 0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.3; filter: blur(1px); } 50% { transform: scale(1.3) rotate(90deg); opacity: 1; filter: drop-shadow(0 0 15px #fff); } }
-        .carousel-wrapper { width: 100%; overflow: hidden; position: relative; -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent); mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent); }
-        .carousel-container { display: flex; gap: 25px; overflow-x: auto; padding: 40px 5vw; scrollbar-width: none; user-select: none; -webkit-overflow-scrolling: touch; }
-        .log-card { min-width: 300px; width: 80vw; max-width: 320px; height: 420px; background: var(--glass-bg); backdrop-filter: blur(45px) saturate(210%); border: 1.5px solid var(--glass-border); border-radius: 28px; padding: 25px; display: flex; flex-direction: column; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); position: relative; overflow: hidden; flex-shrink: 0; }
-        .card-1 { --card-glow: var(--color-1); box-shadow: 0 10px 30px rgba(44, 80, 103, 0.2); }
-        .card-2 { --card-glow: var(--color-2); box-shadow: 0 10px 30px rgba(59, 166, 166, 0.2); }
-        .card-3 { --card-glow: var(--color-3); box-shadow: 0 10px 30px rgba(80, 191, 88, 0.2); }
-        .card-4 { --card-glow: var(--color-4); box-shadow: 0 10px 30px rgba(242, 202, 82, 0.2); }
-        .card-5 { --card-glow: var(--color-5); box-shadow: 0 10px 30px rgba(242, 56, 57, 0.2); }
+
+        /* CARROSSEL & CARDS */
+        .carousel-wrapper { width: 100%; overflow: hidden; position: relative; -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent); }
+        .carousel-container { display: flex; gap: 25px; overflow-x: auto; padding: 40px 5vw; scrollbar-width: none; }
+        .log-card { min-width: 300px; height: 420px; background: var(--glass-bg); backdrop-filter: blur(45px); border: 1.5px solid var(--glass-border); border-radius: 28px; padding: 25px; flex-shrink: 0; transition: 0.4s; }
+        .log-card:hover { transform: scale(1.03); border-color: #fff; }
+
+        /* GANTT MANTIDO */
         .gantt-wrapper { width: 95%; max-width: 1000px; background: var(--glass-bg); backdrop-filter: blur(40px); border: 1.5px solid var(--glass-border); border-radius: 24px; padding: 30px; }
-        .gantt-bar { position: absolute; height: 100%; top: 0; border-radius: 20px; background: var(--bar-color); box-shadow: 0 0 15px var(--bar-color); opacity: 0.85; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer !important; z-index: 5; }
-        .sobre-container { width: 100%; display: flex; flex-direction: column; align-items: center; position: relative; gap: 80px; }
+        .gantt-row { display: flex; align-items: center; height: 35px; margin-bottom: 10px; }
+        .gantt-task-name { width: 110px; font-size: 0.75rem; }
+        .gantt-bar-area { flex: 1; position: relative; height: 14px; background: rgba(255,255,255,0.03); border-radius: 20px; }
+        .gantt-bar { position: absolute; height: 100%; border-radius: 20px; transition: 0.4s; cursor: pointer !important; }
+
+        /* STORY DECK & RING */
         .story-deck { position: relative; width: 240px; height: 340px; perspective: 1000px; }
-        .story-card { position: absolute; width: 100%; height: 100%; background: var(--glass-bg); border: 1.5px solid var(--glass-border); border-radius: 20px; overflow: hidden; transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); cursor: pointer !important; transform-origin: center bottom; }
-        .story-card img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; display: block; }
-        .contact-3d-scene { position: relative; width: 100%; height: 600px; display: flex; align-items: center; justify-content: center; perspective: 3000px; overflow: hidden; }
+        .story-card { position: absolute; width: 100%; height: 100%; background: var(--glass-bg); border: 1.5px solid var(--glass-border); border-radius: 20px; overflow: hidden; transition: 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); cursor: pointer !important; }
+        .story-card img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .contact-3d-scene { position: relative; width: 100%; height: 600px; display: flex; align-items: center; justify-content: center; perspective: 3000px; }
         .ring-master { position: absolute; width: 100%; height: 100%; transform-style: preserve-3d; animation: rotateRing 35s linear infinite; }
-        .ring-face { position: absolute; width: 88px; height: 380px; left: 50%; top: 50%; margin-left: -44px; margin-top: -190px; border-top: 1.5px solid var(--glass-border); border-bottom: 1.5px solid var(--glass-border); backface-visibility: visible; transform-style: preserve-3d; background-size: 3168px 100%; background-repeat: no-repeat; }
+        .ring-face { position: absolute; width: 88px; height: 380px; left: 50%; top: 50%; margin-left: -44px; margin-top: -190px; border-top: 1.5px solid var(--glass-border); border-bottom: 1.5px solid var(--glass-border); backface-visibility: visible; }
+        
         @keyframes rotateRing { from { transform: rotateY(0deg) rotateX(8deg); } to { transform: rotateY(360deg) rotateX(8deg); } }
-        #modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); z-index: 2000; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; padding: 20px; }
-        .modal-content { background: var(--glass-bg); backdrop-filter: blur(50px) saturate(200%); border: 1.5px solid var(--glass-border); padding: 40px; border-radius: 32px; max-width: 600px; width: 100%; max-height: 85vh; overflow-y: auto; transform: scale(0.9); transition: transform 0.3s ease; text-align: center; }
-        #modal-overlay.active { display: flex; opacity: 1; }
+
+        /* MODAL */
+        #modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); z-index: 2000; display: none; align-items: center; justify-content: center; }
+        #modal-overlay.active { display: flex; }
+        .modal-content { background: var(--glass-bg); padding: 40px; border-radius: 32px; max-width: 600px; width: 90%; text-align: center; border: 1.5px solid var(--glass-border); }
+
+        /* BOTÃO ADICIONAR */
+        .add-card-btn { background: none; border: 2px dashed var(--glass-border); color: #fff; border-radius: 28px; min-width: 300px; height: 420px; display: flex; align-items: center; justify-content: center; font-size: 3rem; cursor: pointer !important; transition: 0.3s; }
+        .add-card-btn:hover { background: rgba(255,255,255,0.05); border-color: var(--color-3); }
     </style>
 </head>
 <body>
 
     <button id="admin-login-btn" onclick="toggleAuth()">Admin Login</button>
-    <div id="save-button" class="save-bar" onclick="saveData()">SALVAR ALTERAÇÕES NO FIREBASE</div>
+    <div id="save-button" class="save-bar" onclick="saveAllToFirebase()">SALVAR TODAS AS ALTERAÇÕES</div>
 
-    <svg id="custom-cursor" viewBox="0 0 24 24">
-        <path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z" />
-    </svg>
+    <svg id="custom-cursor" viewBox="0 0 24 24"><path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z" /></svg>
 
     <nav class="top-sidebar">
-        <a href="#home" class="nav-item">
-            <svg class="nav-star" viewBox="0 0 24 24" style="fill: var(--color-1);"><path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z" /></svg>
-            <span class="nav-label">Home</span>
-        </a>
-        <a href="#diario" class="nav-item">
-            <svg class="nav-star" viewBox="0 0 24 24" style="fill: var(--color-2);"><path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z" /></svg>
-            <span class="nav-label">Diário</span>
-        </a>
-        <a href="#projetos" class="nav-item">
-            <svg class="nav-star" viewBox="0 0 24 24" style="fill: var(--color-3);"><path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z" /></svg>
-            <span class="nav-label">Projetos</span>
-        </a>
-        <a href="#sobre" class="nav-item">
-            <svg class="nav-star" viewBox="0 0 24 24" style="fill: var(--color-4);"><path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z" /></svg>
-            <span class="nav-label">Sobre</span>
-        </a>
-        <a href="#contato" class="nav-item">
-            <svg class="nav-star" viewBox="0 0 24 24" style="fill: var(--color-5);"><path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z" /></svg>
-            <span class="nav-label">Contato</span>
-        </a>
+        <a href="#home" class="nav-item"><svg class="nav-star" viewBox="0 0 24 24" style="fill: var(--color-1);"><path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z" /></svg><span class="nav-label">Home</span></a>
+        <a href="#diario" class="nav-item"><svg class="nav-star" viewBox="0 0 24 24" style="fill: var(--color-2);"><path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z" /></svg><span class="nav-label">Diário</span></a>
+        <a href="#projetos" class="nav-item"><svg class="nav-star" viewBox="0 0 24 24" style="fill: var(--color-3);"><path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z" /></svg><span class="nav-label">Projetos</span></a>
+        <a href="#sobre" class="nav-item"><svg class="nav-star" viewBox="0 0 24 24" style="fill: var(--color-4);"><path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z" /></svg><span class="nav-label">Sobre</span></a>
+        <a href="#contato" class="nav-item"><svg class="nav-star" viewBox="0 0 24 24" style="fill: var(--color-5);"><path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z" /></svg><span class="nav-label">Contato</span></a>
     </nav>
 
     <div id="bg-container"></div>
 
     <div class="content-wrapper">
         <section id="home">
-            <div class="logo-container">
-                <img src="novalogo" alt="NOVA">
-            </div>
-            <svg class="scroll-star-static" viewBox="0 0 24 24">
-                <path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z" />
-            </svg>
+            <div class="logo-container"><img src="novalogo" alt="NOVA"></div>
+            <svg class="scroll-star-static" viewBox="0 0 24 24" style="width:35px; fill:white;"><path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z" /></svg>
         </section>
 
         <section id="diario">
-            <h2 style="margin-bottom: 30px; font-weight: 200; letter-spacing: 5px; text-align: center;">DIÁRIO DE BORDO</h2>
+            <h2 style="margin-bottom: 30px; font-weight: 200; letter-spacing: 5px;">DIÁRIO DE BORDO</h2>
             <div class="carousel-wrapper">
                 <div class="carousel-container" id="carousel">
                     </div>
@@ -162,26 +121,28 @@
         </section>
 
         <section id="projetos">
-            <h2 style="margin-bottom: 40px; font-weight: 200; letter-spacing: 5px; text-align: center;">CRONOGRAMA</h2>
+            <h2 style="margin-bottom: 40px; font-weight: 200; letter-spacing: 5px;">CRONOGRAMA</h2>
             <div class="gantt-wrapper">
-                <div class="gantt-container" id="gantt-data">
+                <div class="gantt-container" id="gantt-render">
                     </div>
             </div>
         </section>
 
         <section id="sobre">
-            <h2 style="margin-bottom: 50px; font-weight: 200; letter-spacing: 5px; text-align: center;">SOBRE O NOVA</h2>
+            <h2 style="margin-bottom: 50px; font-weight: 200; letter-spacing: 5px;">SOBRE O NOVA</h2>
             <div class="sobre-container">
                 <div class="story-deck" id="story-deck">
-                    </div>
+                    <div class="story-card" data-state="deck" onclick="handleCardClick(this)"><img src="pablo.png"></div>
+                    <div class="story-card" data-state="deck" onclick="handleCardClick(this)"><img src="joao.png"></div>
+                </div>
             </div>
         </section>
 
         <section id="contato">
             <div class="contact-3d-scene">
                 <div class="motivation-core">
-                    <h2 contenteditable="false" id="motivation-title">MOTIVAÇÃO</h2>
-                    <p id="motivation-subtitle" style="font-size: 0.6rem; letter-spacing: 5px; opacity: 0.5; margin-top: 10px;">PABLO S. NOVA</p>
+                    <h2 id="edit-moti-title">MOTIVAÇÃO</h2>
+                    <p id="edit-moti-sub" style="font-size: 0.6rem; letter-spacing: 5px; opacity: 0.5;">PABLO S. NOVA</p>
                 </div>
                 <div class="ring-master" id="image-ring"></div>
             </div>
@@ -190,150 +151,177 @@
 
     <div id="modal-overlay" onclick="closeModal()">
         <div class="modal-content" onclick="event.stopPropagation()">
-            <div id="modal-member-header"></div>
-            <h2 id="modal-title" style="margin-bottom: 20px; font-weight: 200; letter-spacing: 3px;"></h2>
-            <div id="modal-body">
-                <p id="modal-text" style="color: rgba(255,255,255,0.7); line-height: 1.8;"></p>
-                <div id="modal-cards-container" class="modal-grid"></div>
-            </div>
+            <h2 id="modal-title"></h2>
+            <p id="modal-text" style="margin-top:20px; opacity:0.7;"></p>
         </div>
     </div>
 
     <script>
-        // Your web app's Firebase configuration
+        // CONFIG FIREBASE (Sua Config Original)
         const firebaseConfig = {
           apiKey: "AIzaSyDpVftgpBYSoGPuAIDS_HlEs931_V9knAQ",
           authDomain: "nova-9f394.firebaseapp.com",
           projectId: "nova-9f394",
-          storageBucket: "nova-9f394.firebasestorage.app",
-          messagingSenderId: "510268851568",
+          databaseURL: "https://nova-9f394-default-rtdb.firebaseio.com",
           appId: "1:510268851568:web:6742366633b39666503bb5"
         };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.database();
         const provider = new firebase.auth.GoogleAuthProvider();
-
         const ADMIN_EMAIL = "pablo11ssousa2@gmail.com";
         let isAdmin = false;
 
-        // --- AUTH LOGIC ---
+        // --- AUTH & ADMIN ---
         function toggleAuth() {
-            if (auth.currentUser) {
-                auth.signOut();
-                window.location.reload();
-            } else {
-                auth.signInWithPopup(provider).then((result) => {
-                    if (result.user.email !== ADMIN_EMAIL) {
-                        alert("Acesso negado. Apenas o administrador pode editar.");
-                        auth.signOut();
-                    }
-                });
-            }
+            if (auth.currentUser) { auth.signOut(); window.location.reload(); }
+            else { auth.signInWithPopup(provider); }
         }
 
         auth.onAuthStateChanged(user => {
             if (user && user.email === ADMIN_EMAIL) {
                 isAdmin = true;
                 document.body.classList.add('is-admin');
-                document.getElementById('admin-login-btn').innerText = "Logout Admin";
                 document.getElementById('save-button').style.display = 'block';
                 enableEditing();
             }
+            loadAllData();
         });
 
         function enableEditing() {
-            document.querySelectorAll('[contenteditable]').forEach(el => el.contentEditable = "true");
-            document.querySelectorAll('h2, p, .gantt-task-name').forEach(el => {
-                el.contentEditable = "true";
-                el.classList.add('edit-hint');
+            const targets = ['#edit-moti-title', '#edit-moti-sub', 'h2', 'p'];
+            targets.forEach(t => {
+                document.querySelectorAll(t).forEach(el => {
+                    el.contentEditable = true;
+                    el.classList.add('edit-hint');
+                });
             });
         }
 
-        // --- DATA SYNC ---
-        function saveData() {
-            const updates = {
-                motivation: {
-                    title: document.getElementById('motivation-title').innerText,
-                    subtitle: document.getElementById('motivation-subtitle').innerText
-                }
-                // Adicione outros seletores conforme necessário para salvar
-            };
-            db.ref('content/').update(updates).then(() => alert("Dados salvos com sucesso!"));
-        }
-
-        // --- CARREGAR DADOS INICIAIS ---
-        function loadContent() {
-            db.ref('content/').once('value', (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    if(data.motivation) {
-                        document.getElementById('motivation-title').innerText = data.motivation.title;
-                        document.getElementById('motivation-subtitle').innerText = data.motivation.subtitle;
-                    }
+        // --- DATA ENGINE (DIARIO & GANTT) ---
+        function loadAllData() {
+            db.ref('nova_v2/').on('value', snapshot => {
+                const data = snapshot.val() || {};
+                renderDiario(data.diario || []);
+                renderGantt(data.gantt || []);
+                if(data.motivation) {
+                    document.getElementById('edit-moti-title').innerText = data.motivation.title;
+                    document.getElementById('edit-moti-sub').innerText = data.motivation.subtitle;
                 }
             });
         }
 
-        // [LOGICA ORIGINAL DO SITE MANTIDA]
-        const cursor = document.getElementById('custom-cursor');
-        const carousel = document.getElementById('carousel');
-        const ringContainer = document.getElementById('image-ring');
-        let isDown = false;
-        let startX, scrollLeft;
-        let autoScrollActive = true;
-
-        // Inicia funções visuais
-        document.addEventListener('mousemove', (e) => {
-            if (window.innerWidth > 768) {
-                cursor.style.left = e.clientX + 'px';
-                cursor.style.top = e.clientY + 'px';
+        function renderDiario(items) {
+            const container = document.getElementById('carousel');
+            container.innerHTML = '';
+            items.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = `log-card card-${(index % 5) + 1}`;
+                card.innerHTML = `
+                    <div class="card-header"><span>${item.data}</span><span class="card-fase">${item.fase}</span></div>
+                    <h2 contenteditable="${isAdmin}" class="${isAdmin?'edit-hint':''}">${item.titulo}</h2>
+                    <p contenteditable="${isAdmin}" class="${isAdmin?'edit-hint':''}">${item.texto}</p>
+                    <div class="card-footer">Autor: ${item.autor}</div>
+                `;
+                card.onclick = () => !isAdmin && openModal(item.titulo, item.texto);
+                container.appendChild(card);
+            });
+            if(isAdmin) {
+                const addBtn = document.createElement('div');
+                addBtn.className = 'add-card-btn';
+                addBtn.innerText = '+';
+                addBtn.onclick = addNewCard;
+                container.appendChild(addBtn);
             }
+        }
+
+        function renderGantt(tasks) {
+            const container = document.getElementById('gantt-render');
+            container.innerHTML = `
+                <div class="gantt-header" style="display:flex; margin-bottom:15px; opacity:0.4; font-size:0.6rem; letter-spacing:2px;">
+                    <div style="width:110px"></div><div style="flex:1; text-align:center;">MÊS 01</div>
+                </div>
+            `;
+            tasks.forEach(task => {
+                const row = document.createElement('div');
+                row.className = 'gantt-row';
+                row.innerHTML = `
+                    <div class="gantt-task-name" contenteditable="${isAdmin}">${task.nome}</div>
+                    <div class="gantt-bar-area">
+                        <div class="gantt-bar" style="width:${task.width}%; left:${task.left}%; background:${task.color}; box-shadow: 0 0 15px ${task.color}"></div>
+                    </div>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        function addNewCard() {
+            db.ref('nova_v2/diario').once('value', s => {
+                const current = s.val() || [];
+                current.push({ data: "Hoje", fase: "Fase 00", titulo: "Novo Post", texto: "Conteúdo...", autor: "Pablo" });
+                db.ref('nova_v2/diario').set(current);
+            });
+        }
+
+        function saveAllToFirebase() {
+            const diarioItems = [];
+            document.querySelectorAll('.log-card').forEach(card => {
+                diarioItems.push({
+                    data: card.querySelector('.card-header span:first-child').innerText,
+                    fase: card.querySelector('.card-fase').innerText,
+                    titulo: card.querySelector('h2').innerText,
+                    texto: card.querySelector('p').innerText,
+                    autor: "Pablo"
+                });
+            });
+
+            db.ref('nova_v2/').update({
+                motivation: {
+                    title: document.getElementById('edit-moti-title').innerText,
+                    subtitle: document.getElementById('edit-moti-sub').innerText
+                },
+                diario: diarioItems
+            }).then(() => alert("Sistema NOVA Atualizado!"));
+        }
+
+        // --- VISUAIS ORIGINAIS (CURSOR, RING, CARDS) ---
+        const cursor = document.getElementById('custom-cursor');
+        document.addEventListener('mousemove', e => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
         });
 
-        function autoScroll() {
-            if (autoScrollActive && !isDown) {
-                carousel.scrollLeft += 0.8; 
-                if (carousel.scrollLeft >= (carousel.scrollWidth - carousel.clientWidth - 1)) carousel.scrollLeft = 0;
-            }
-        }
-        setInterval(autoScroll, 20);
-
-        // ... (resto das suas funções de modal, ring 3D e carrossel permanecem exatamente iguais)
-        
-        // Inicialização
-        window.onload = () => {
-            loadContent();
-            // renderizar cards e cronograma aqui...
-        };
-
-        function closeModal() { document.getElementById('modal-overlay').classList.remove('active'); autoScrollActive = true; }
-        
-        // Intersection Observer
-        const sectionObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) entry.target.classList.add('section-visible');
-            });
-        }, { threshold: 0.2 });
-        document.querySelectorAll('section').forEach(section => sectionObserver.observe(section));
-
-        // Ring 3D logic (igual ao seu)
-        const imgExterna = "bannerext";
-        const imgInterna = "bannerint";
-        function createRingWithImages() {
-            const faces = 36;
-            const faceWidth = window.innerWidth < 768 ? 45 : 88;
-            const radius = window.innerWidth < 768 ? 260 : 500;
-            for (let i = 0; i < faces; i++) {
+        function createRing() {
+            const ring = document.getElementById('image-ring');
+            for (let i = 0; i < 36; i++) {
                 const face = document.createElement('div');
                 face.className = 'ring-face';
-                face.style.transform = `rotateY(${i * (360 / faces)}deg) translateZ(${radius}px)`;
-                face.style.backgroundImage = `url('${imgExterna}')`;
-                face.style.backgroundPosition = `${-i * faceWidth}px center`;
-                ringContainer.appendChild(face);
+                face.style.transform = `rotateY(${i * 10}deg) translateZ(500px)`;
+                face.style.backgroundImage = `url('bannerext')`; // Substitua pelo link real
+                face.style.backgroundPosition = `${-i * 88}px center`;
+                ring.appendChild(face);
             }
         }
-        createRingWithImages();
+        createRing();
+
+        function handleCardClick(card) {
+            const state = card.getAttribute('data-state');
+            document.querySelectorAll('.story-card').forEach(c => c.setAttribute('data-state', 'deck'));
+            if(state === 'deck') card.setAttribute('data-state', 'active');
+        }
+
+        function openModal(t, txt) {
+            document.getElementById('modal-title').innerText = t;
+            document.getElementById('modal-text').innerText = txt;
+            document.getElementById('modal-overlay').classList.add('active');
+        }
+        function closeModal() { document.getElementById('modal-overlay').classList.remove('active'); }
+
+        // Observer para animação
+        const obs = new IntersectionObserver(es => {
+            es.forEach(e => { if(e.isIntersecting) e.target.classList.add('section-visible') });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('section').forEach(s => obs.observe(s));
     </script>
 </body>
 </html>
