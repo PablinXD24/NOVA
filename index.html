@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NOVA - Admin</title>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+    <title>NOVA | Admin</title>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
     
     <style>
         :root {
@@ -14,98 +14,122 @@
             --glass-border: rgba(255, 255, 255, 0.18);
             --glass-highlight: rgba(255, 255, 255, 0.08);
             --accent-color: #ffffff;
-            --color-1: #2C5067; --color-2: #3BA6A6; --color-3: #50BF58; --color-4: #F2CA52; --color-5: #F23839;
+            --color-1: #2C5067;
+            --color-2: #3BA6A6;
+            --color-3: #50BF58;
+            --color-4: #F2CA52;
+            --color-5: #F23839;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; cursor: none !important; scroll-behavior: smooth; }
-        body { font-family: 'Inter', sans-serif; background-color: #000; color: #fff; overflow-x: hidden; width: 100%; }
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background-color: #000; color: #fff; overflow-x: hidden; width: 100%; }
 
-        /* --- ESTILO NOVO: BOTÃO LOGIN & ADMIN --- */
-        .admin-controls {
-            position: fixed; top: 20px; right: 20px; z-index: 2001; display: flex; gap: 10px;
-        }
-        .btn-admin {
-            background: var(--glass-bg); backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border); color: #fff;
-            padding: 8px 15px; border-radius: 20px; font-size: 0.7rem;
-            letter-spacing: 1px; text-transform: uppercase; transition: 0.3s;
-        }
-        .btn-admin:hover { background: rgba(255,255,255,0.1); }
-        .admin-only { display: none; } /* Escondido por padrão */
+        /* --- BOTÃO LOGIN ADMIN --- */
+        #admin-btn { position: fixed; bottom: 20px; right: 20px; z-index: 5000; background: var(--glass-bg); border: 1px solid var(--glass-border); color: white; padding: 10px; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); transition: all 0.3s; }
+        #admin-btn:hover { transform: scale(1.1); border-color: #fff; }
+        .admin-only { display: none; }
+        .admin-active .admin-only { display: block; }
+        
+        .btn-add { background: none; border: 1px dashed var(--glass-border); color: #fff; padding: 20px; border-radius: 28px; min-width: 300px; display: flex; align-items: center; justify-content: center; font-size: 2rem; transition: 0.3s; }
+        .btn-add:hover { background: rgba(255,255,255,0.05); }
+        .btn-delete { position: absolute; top: 10px; right: 10px; background: rgba(255,0,0,0.3); border: none; color: white; border-radius: 50%; width: 25px; height: 25px; z-index: 10; cursor: pointer !important; }
 
-        #admin-form-container {
-            width: 100%; max-width: 500px; margin: 20px auto;
-            background: var(--glass-bg); padding: 20px; border-radius: 20px;
-            border: 1px solid var(--glass-border);
-        }
-        input, textarea, select {
-            width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border);
-            color: #fff; padding: 10px; margin-bottom: 10px; border-radius: 8px; font-family: inherit;
-        }
-
-        /* --- MANTENDO TODOS OS ESTILOS ORIGINAIS --- */
+        /* --- SIDEBAR ESTÁTICA --- */
         .top-sidebar { position: fixed; top: 30px; left: 50%; transform: translateX(-50%); z-index: 1000; display: flex; gap: 40px; padding: 10px 20px; }
         .nav-item { position: relative; display: flex; flex-direction: column; align-items: center; text-decoration: none; }
         .nav-star { width: 24px; height: 24px; transition: transform 0.3s ease; }
         .nav-item:hover .nav-star { transform: scale(1.4) rotate(90deg); }
         .nav-label { position: absolute; top: 35px; font-size: 0.6rem; letter-spacing: 2px; text-transform: uppercase; opacity: 0; white-space: nowrap; transition: opacity 0.3s ease; pointer-events: none; color: #fff; }
         .nav-item:hover .nav-label { opacity: 1; }
+
         #custom-cursor { position: fixed; width: 24px; height: 24px; fill: var(--accent-color); pointer-events: none; z-index: 9999; transform: translate(-50%, -50%); filter: drop-shadow(0 0 8px rgba(255,255,255,0.8)); transition: transform 0.1s ease-out; }
         #bg-container { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: -1; background-color: #000; }
+
         section { min-height: 100vh; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; padding: 80px 20px; opacity: 0; transform: translateY(30px); transition: opacity 1.2s ease, transform 1.2s ease; }
         section.section-visible { opacity: 1; transform: translateY(0); }
+        .logo-container { display: flex; justify-content: center; align-items: center; width: 100%; }
         .logo-container img { width: 450px; max-width: 90%; height: auto; filter: drop-shadow(0 0 20px rgba(255,255,255,0.1)); }
         
-        /* CARROSSEL & CARDS */
+        .scroll-star-static { width: 35px; height: 35px; fill: var(--accent-color); margin-top: 50px; animation: star-glow-pulse 2.5s infinite ease-in-out; }
+        @keyframes star-glow-pulse { 0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.3; filter: blur(1px); } 50% { transform: scale(1.3) rotate(90deg); opacity: 1; filter: drop-shadow(0 0 15px #fff); } }
+
+        /* --- CARROSSEL --- */
         .carousel-wrapper { width: 100%; overflow: hidden; position: relative; -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent); mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent); }
-        .carousel-container { display: flex; gap: 25px; overflow-x: auto; padding: 40px 5vw; scrollbar-width: none; user-select: none; }
+        .carousel-container { display: flex; gap: 25px; overflow-x: auto; padding: 40px 5vw; scrollbar-width: none; user-select: none; -webkit-overflow-scrolling: touch; }
+        .carousel-container::-webkit-scrollbar { display: none; }
+
         .log-card { min-width: 300px; width: 80vw; max-width: 320px; height: 420px; background: var(--glass-bg); backdrop-filter: blur(45px) saturate(210%); border: 1.5px solid var(--glass-border); border-radius: 28px; padding: 25px; display: flex; flex-direction: column; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); position: relative; overflow: hidden; flex-shrink: 0; }
+        .log-card::after { content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle at center, var(--card-glow) 0%, transparent 70%); opacity: 0.15; pointer-events: none; transition: opacity 0.4s ease; }
         .card-1 { --card-glow: var(--color-1); box-shadow: 0 10px 30px rgba(44, 80, 103, 0.2); }
         .card-2 { --card-glow: var(--color-2); box-shadow: 0 10px 30px rgba(59, 166, 166, 0.2); }
         .card-3 { --card-glow: var(--color-3); box-shadow: 0 10px 30px rgba(80, 191, 88, 0.2); }
         .card-4 { --card-glow: var(--color-4); box-shadow: 0 10px 30px rgba(242, 202, 82, 0.2); }
         .card-5 { --card-glow: var(--color-5); box-shadow: 0 10px 30px rgba(242, 56, 57, 0.2); }
-        .delete-btn { position: absolute; top: 10px; right: 10px; background: var(--color-5); border: none; color: white; border-radius: 50%; width: 25px; height: 25px; cursor: pointer !important; font-size: 10px; z-index: 10; }
+        .log-card:hover { transform: scale(1.03); border-color: rgba(255, 255, 255, 0.4); }
 
-        /* GANTT */
+        .card-header { display: flex; justify-content: space-between; font-size: 0.7rem; letter-spacing: 1px; text-transform: uppercase; opacity: 0.6; margin-bottom: 20px; }
+        .card-fase { font-weight: 700; color: var(--card-glow); }
+        .log-card h2 { font-size: 1.3rem; font-weight: 400; margin-bottom: 15px; }
+        .log-card p { font-size: 0.9rem; line-height: 1.6; color: rgba(255,255,255,0.6); flex-grow: 1; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; }
+        .card-footer { margin-top: 20px; font-size: 0.75rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px; opacity: 0.5; }
+
+        /* --- GANTT CHART --- */
         .gantt-wrapper { width: 95%; max-width: 1000px; background: var(--glass-bg); backdrop-filter: blur(40px); border: 1.5px solid var(--glass-border); border-radius: 24px; padding: 30px; }
-        .gantt-row { display: flex; align-items: center; height: 35px; position: relative; margin-bottom: 10px;}
-        .gantt-task-name { width: 110px; font-size: 0.75rem; opacity: 0.8; }
+        .gantt-container { width: 100%; display: flex; flex-direction: column; gap: 20px; }
+        .gantt-header { display: flex; border-bottom: 1px solid var(--glass-border); padding-bottom: 15px; margin-bottom: 10px; }
+        .gantt-col-label { flex: 1; font-size: 0.7rem; opacity: 0.4; text-align: center; text-transform: uppercase; letter-spacing: 3px; }
+        .gantt-row { display: flex; align-items: center; height: 35px; position: relative; }
+        .gantt-task-name { width: 110px; font-size: 0.75rem; opacity: 0.8; font-weight: 300; letter-spacing: 1px; }
         .gantt-bar-area { flex: 1; position: relative; height: 14px; background: rgba(255,255,255,0.03); border-radius: 20px; }
-        .gantt-bar { position: absolute; height: 100%; border-radius: 20px; background: var(--bar-color); box-shadow: 0 0 15px var(--bar-color); transition: 0.4s; z-index: 5; }
+        .gantt-bar { position: absolute; height: 100%; top: 0; border-radius: 20px; background: var(--bar-color); box-shadow: 0 0 15px var(--bar-color); opacity: 0.85; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer !important; z-index: 5; }
+        .gantt-bar:hover { opacity: 1; transform: scaleY(1.3); filter: brightness(1.2); }
 
-        /* SOBRE & ANEL */
+        /* --- SOBRE & ANEL 3D (Mantidos conforme original) --- */
+        .sobre-container { width: 100%; display: flex; flex-direction: column; align-items: center; position: relative; gap: 80px; }
         .story-deck { position: relative; width: 240px; height: 340px; perspective: 1000px; }
-        .story-card { position: absolute; width: 100%; height: 100%; background: var(--glass-bg); border: 1.5px solid var(--glass-border); border-radius: 20px; overflow: hidden; transition: 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); transform-origin: center bottom; }
-        .story-card img { width: 100%; height: 100%; object-fit: cover; }
-        .contact-3d-scene { position: relative; width: 100%; height: 600px; display: flex; align-items: center; justify-content: center; perspective: 3000px; overflow: hidden; }
-        .ring-master { position: absolute; width: 100%; height: 100%; transform-style: preserve-3d; animation: rotateRing 35s linear infinite; }
-        .ring-face { position: absolute; width: 88px; height: 380px; left: 50%; top: 50%; margin-left: -44px; margin-top: -190px; border-top: 1.5px solid var(--glass-border); border-bottom: 1.5px solid var(--glass-border); }
+        .story-card { position: absolute; width: 100%; height: 100%; background: var(--glass-bg); border: 1.5px solid var(--glass-border); border-radius: 20px; overflow: hidden; transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 10px 30px rgba(0,0,0,0.5); cursor: pointer !important; transform-origin: center bottom; }
+        .story-card img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; display: block; }
+        .story-card[data-state="deck"]:nth-child(1) { transform: rotate(-3deg); z-index: 5; }
+        .story-card[data-state="deck"]:nth-child(2) { transform: rotate(-1.5deg); z-index: 4; }
+        .story-card[data-state="active"] { transform: translateY(-260px) scale(1.1) rotate(0deg) !important; z-index: 100; border-color: #fff; }
 
+        .floating-images-container { display: flex; justify-content: center; gap: 50px; width: 100%; max-width: 1000px; }
+        .floating-img-wrapper { width: 100px; height: 100px; position: relative; animation: swing-random var(--duration, 4s) ease-in-out infinite alternate; cursor: pointer !important; }
+        .floating-img-wrapper img { width: 100%; height: 100%; object-fit: contain; transition: transform 0.3s ease; }
+        @keyframes swing-random { 0% { transform: rotate(-8deg) translateY(0px); } 100% { transform: rotate(8deg) translateY(-12px); } }
+
+        .contact-3d-scene { position: relative; width: 100%; height: 600px; display: flex; align-items: center; justify-content: center; perspective: 3000px; overflow: hidden; }
+        .motivation-core { position: absolute; z-index: 200; text-align: center; background: rgba(10, 10, 10, 0.85); backdrop-filter: blur(35px); padding: 35px 80px; border-radius: 100px; border: 1px solid var(--glass-border); pointer-events: none; }
+        .ring-master { position: absolute; width: 100%; height: 100%; transform-style: preserve-3d; animation: rotateRing 35s linear infinite; }
+        .ring-face { position: absolute; width: 88px; height: 380px; left: 50%; top: 50%; margin-left: -44px; margin-top: -190px; border-top: 1.5px solid var(--glass-border); border-bottom: 1.5px solid var(--glass-border); transform-style: preserve-3d; background-size: 3168px 100%; }
         @keyframes rotateRing { from { transform: rotateY(0deg) rotateX(8deg); } to { transform: rotateY(360deg) rotateX(8deg); } }
 
-        /* MODAL */
-        #modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); z-index: 2000; display: none; align-items: center; justify-content: center; opacity: 0; transition: 0.3s; }
-        .modal-content { background: var(--glass-bg); backdrop-filter: blur(50px); border: 1.5px solid var(--glass-border); padding: 40px; border-radius: 32px; max-width: 600px; width: 100%; transform: scale(0.9); transition: 0.3s; text-align: center; }
+        #modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); z-index: 2000; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; padding: 20px; }
+        .modal-content { background: var(--glass-bg); backdrop-filter: blur(50px) saturate(200%); border: 1.5px solid var(--glass-border); padding: 40px; border-radius: 32px; max-width: 600px; width: 100%; max-height: 85vh; overflow-y: auto; text-align: center; }
         #modal-overlay.active { display: flex; opacity: 1; }
-        #modal-overlay.active .modal-content { transform: scale(1); }
+        
+        /* Formulário Simples no Modal para Add */
+        .admin-form input, .admin-form textarea { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color: white; padding: 10px; margin-bottom: 10px; border-radius: 8px; }
+        .admin-form button { background: white; color: black; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer !important; }
 
         @media (max-width: 768px) {
-            #custom-cursor { display: none; }
             * { cursor: auto !important; }
-            .top-sidebar { gap: 10px; width: 90%; }
+            #custom-cursor { display: none; }
+            .top-sidebar { gap: 5px; top: 15px; width: 90%; background: rgba(0,0,0,0.3); backdrop-filter: blur(10px); border-radius: 50px; }
             .nav-label { display: none; }
+            .logo-container img { width: 320px; }
         }
     </style>
 </head>
-<body>
+<body class="loading">
 
-    <svg id="custom-cursor" viewBox="0 0 24 24"><path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z" /></svg>
+    <svg id="custom-cursor" viewBox="0 0 24 24">
+        <path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z" />
+    </svg>
 
-    <div class="admin-controls">
-        <button class="btn-admin" id="login-btn" onclick="login()">Login Admin</button>
-        <button class="btn-admin admin-only" id="logout-btn" onclick="logout()">Sair</button>
-    </div>
+    <button id="admin-btn" onclick="toggleLogin()">
+        <svg viewBox="0 0 24 24" width="20" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
+    </button>
 
     <nav class="top-sidebar">
         <a href="#home" class="nav-item">
@@ -134,26 +158,16 @@
 
     <div class="content-wrapper">
         <section id="home">
-            <div class="logo-container"><img src="novalogo" alt="NOVA"></div>
+            <div class="logo-container">
+                <img src="novalogo" alt="NOVA">
+            </div>
+            <svg class="scroll-star-static" viewBox="0 0 24 24">
+                <path d="M12 0L14.5 9.5L24 12L14.5 14.5L12 24L9.5 14.5L0 12L9.5 9.5L12 0Z" />
+            </svg>
         </section>
 
         <section id="diario">
             <h2 style="margin-bottom: 30px; font-weight: 200; letter-spacing: 5px; text-align: center;">DIÁRIO DE BORDO</h2>
-            
-            <div id="admin-form-container" class="admin-only">
-                <h3 style="margin-bottom:15px; font-size: 0.8rem; letter-spacing:2px;">NOVO REGISTRO</h3>
-                <input type="text" id="post-title" placeholder="Título da Fase">
-                <textarea id="post-desc" placeholder="Descrição do desenvolvimento..."></textarea>
-                <select id="post-color">
-                    <option value="card-1">Cor 1 (Azul)</option>
-                    <option value="card-2">Cor 2 (Ciano)</option>
-                    <option value="card-3">Cor 3 (Verde)</option>
-                    <option value="card-4">Cor 4 (Amarelo)</option>
-                    <option value="card-5">Cor 5 (Vermelho)</option>
-                </select>
-                <button class="btn-admin" onclick="savePost()" style="width:100%">Publicar no Database</button>
-            </div>
-
             <div class="carousel-wrapper">
                 <div class="carousel-container" id="carousel">
                     </div>
@@ -163,28 +177,38 @@
         <section id="projetos">
             <h2 style="margin-bottom: 40px; font-weight: 200; letter-spacing: 5px; text-align: center;">CRONOGRAMA</h2>
             <div class="gantt-wrapper">
-                <div class="gantt-container">
-                    <div class="gantt-row"><div class="gantt-task-name">UI/UX</div><div class="gantt-bar-area"><div class="gantt-bar" style="width: 25%; left: 0%; --bar-color: var(--color-1);"></div></div></div>
-                    <div class="gantt-row"><div class="gantt-task-name">ENGINE</div><div class="gantt-bar-area"><div class="gantt-bar" style="width: 40%; left: 15%; --bar-color: var(--color-2);"></div></div></div>
-                    <div class="gantt-row"><div class="gantt-task-name">DATA</div><div class="gantt-bar-area"><div class="gantt-bar" style="width: 30%; left: 45%; --bar-color: var(--color-3);"></div></div></div>
-                    <div class="gantt-row"><div class="gantt-task-name">TESTS</div><div class="gantt-bar-area"><div class="gantt-bar" style="width: 20%; left: 70%; --bar-color: var(--color-4);"></div></div></div>
-                    <div class="gantt-row"><div class="gantt-task-name">DEPLOY</div><div class="gantt-bar-area"><div class="gantt-bar" style="width: 10%; left: 90%; --bar-color: var(--color-5);"></div></div></div>
-                </div>
+                <div class="gantt-container" id="gantt-rows">
+                    </div>
             </div>
         </section>
 
         <section id="sobre">
+            <h2 style="margin-bottom: 50px; font-weight: 200; letter-spacing: 5px; text-align: center;">SOBRE O NOVA</h2>
             <div class="sobre-container">
                 <div class="story-deck" id="story-deck">
-                    <div class="story-card" data-state="deck" onclick="handleCardClick(this)"><img src="pablo.png" alt="Pablo"></div>
+                    <div class="story-card" data-state="deck" onclick="handleCardClick(this)"><img src="adriana.png" alt="Adriana"></div>
                     <div class="story-card" data-state="deck" onclick="handleCardClick(this)"><img src="bianca.png" alt="Bianca"></div>
+                    <div class="story-card" data-state="deck" onclick="handleCardClick(this)"><img src="dante.png" alt="Dante"></div>
+                    <div class="story-card" data-state="deck" onclick="handleCardClick(this)"><img src="joao.png" alt="João"></div>
+                    <div class="story-card" data-state="deck" onclick="handleCardClick(this)"><img src="pablo.png" alt="Pablo"></div>
+                </div>
+                <div class="integrantes-wrapper">
+                    <h3 style="font-weight: 200; letter-spacing: 8px; text-transform: uppercase; font-size: 0.9rem; opacity: 0.7; margin-bottom: 10px;">Conheça os integrantes</h3>
+                    <div class="floating-images-container">
+                        <div class="floating-img-wrapper" style="--delay: 1.5s; --duration: 3.8s;" onclick="openMemberModal('Pablo', 'Idealizador e desenvolvedor Full Stack.', 'pablocab.png')">
+                            <img src="pablocab.png" alt="Pablo">
+                        </div>
+                        </div>
                 </div>
             </div>
         </section>
 
         <section id="contato">
             <div class="contact-3d-scene">
-                <div class="motivation-core"><h2>MOTIVAÇÃO</h2><p style="font-size: 0.6rem; letter-spacing: 5px; opacity: 0.5;">PABLO S. NOVA</p></div>
+                <div class="motivation-core">
+                    <h2>MOTIVAÇÃO</h2>
+                    <p style="font-size: 0.6rem; letter-spacing: 5px; opacity: 0.5; margin-top: 10px;">PABLO S. NOVA</p>
+                </div>
                 <div class="ring-master" id="image-ring"></div>
             </div>
         </section>
@@ -192,122 +216,236 @@
 
     <div id="modal-overlay" onclick="closeModal()">
         <div class="modal-content" onclick="event.stopPropagation()">
-            <h2 id="modal-title"></h2>
-            <p id="modal-text"></p>
+            <div id="modal-member-header"></div>
+            <h2 id="modal-title" style="margin-bottom: 20px; font-weight: 200; letter-spacing: 3px;"></h2>
+            <div id="modal-body">
+                <p id="modal-text" style="color: rgba(255,255,255,0.7); line-height: 1.8;"></p>
+                <div id="modal-cards-container" class="modal-grid"></div>
+                <div id="admin-form-area" class="admin-only admin-form"></div>
+            </div>
         </div>
     </div>
 
     <script>
-        // --- CONFIGURAÇÃO FIREBASE ---
+        // CONFIGURAÇÃO FIREBASE (Substitua pelos seus dados do console)
         const firebaseConfig = {
             apiKey: "SUA_API_KEY",
             authDomain: "SEU_PROJETO.firebaseapp.com",
             databaseURL: "https://SEU_PROJETO-default-rtdb.firebaseio.com",
             projectId: "SEU_PROJETO",
             storageBucket: "SEU_PROJETO.appspot.com",
-            messagingSenderId: "SENDER_ID",
+            messagingSenderId: "ID",
             appId: "APP_ID"
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
         const auth = firebase.auth();
-        const provider = new firebase.auth.GoogleAuthProvider();
 
         const ADMIN_EMAIL = "pablo11ssousa2@gmail.com";
         let isAdmin = false;
 
-        // --- AUTH FUNCTIONS ---
-        function login() { auth.signInWithPopup(provider); }
-        function logout() { auth.signOut(); location.reload(); }
+        // --- AUTH ---
+        function toggleLogin() {
+            if (auth.currentUser) {
+                auth.signOut();
+            } else {
+                const provider = new firebase.auth.GoogleAuthProvider();
+                auth.signInWithPopup(provider);
+            }
+        }
 
         auth.onAuthStateChanged(user => {
             if (user && user.email === ADMIN_EMAIL) {
                 isAdmin = true;
-                document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'block');
-                document.getElementById('login-btn').style.display = 'none';
+                document.body.classList.add('admin-active');
+            } else {
+                isAdmin = false;
+                document.body.classList.remove('admin-active');
             }
-            loadPosts();
+            loadData();
         });
 
-        // --- DATABASE FUNCTIONS ---
-        function savePost() {
-            const title = document.getElementById('post-title').value;
-            const desc = document.getElementById('post-desc').value;
-            const color = document.getElementById('post-color').value;
-            if(!title || !desc) return alert("Preencha tudo!");
-
-            db.ref('diario').push({
-                title, desc, color,
-                date: new Date().toLocaleDateString('pt-BR', {day:'2-digit', month:'short'}),
-                timestamp: Date.now()
-            });
-            document.getElementById('post-title').value = '';
-            document.getElementById('post-desc').value = '';
-        }
-
-        function deletePost(id) {
-            if(confirm("Excluir este registro?")) db.ref(`diario/${id}`).remove();
-        }
-
-        function loadPosts() {
+        // --- CARREGAMENTO DE DADOS ---
+        function loadData() {
+            // Carregar Diário
             db.ref('diario').on('value', snapshot => {
                 const container = document.getElementById('carousel');
                 container.innerHTML = '';
-                snapshot.forEach(child => {
-                    const data = child.val();
-                    const id = child.key;
-                    const card = document.createElement('div');
-                    card.className = `log-card ${data.color}`;
-                    card.onclick = () => openModalData(data.title, data.desc);
-                    card.innerHTML = `
-                        ${isAdmin ? `<button class="delete-btn" onclick="event.stopPropagation(); deletePost('${id}')">X</button>` : ''}
-                        <div class="card-header"><span>${data.date}</span><span class="card-fase">Registro</span></div>
-                        <h2>${data.title}</h2>
-                        <p>${data.desc}</p>
-                        <div class="card-footer">Autor: Pablo</div>
-                    `;
-                    container.appendChild(card);
-                });
+                const data = snapshot.val();
+                let i = 1;
+                for (let id in data) {
+                    const item = data[id];
+                    const card = `
+                        <div class="log-card card-${(i%5)+1}" onclick="openModal('${id}', 'diario')" data-fase="${item.fase}">
+                            ${isAdmin ? `<button class="btn-delete" onclick="deleteItem('diario', '${id}')">X</button>` : ''}
+                            <div class="card-header"><span>${item.data}</span><span class="card-fase">${item.fase}</span></div>
+                            <h2>${item.titulo}</h2>
+                            <p>${item.descricao}</p>
+                            <div class="card-footer">Autor: ${item.autor}</div>
+                        </div>`;
+                    container.insertAdjacentHTML('beforeend', card);
+                    i++;
+                }
+                if (isAdmin) {
+                    container.insertAdjacentHTML('beforeend', `<button class="btn-add" onclick="showAddForm('diario')">+</button>`);
+                }
+            });
+
+            // Carregar Gantt
+            db.ref('gantt').on('value', snapshot => {
+                const container = document.getElementById('gantt-rows');
+                container.innerHTML = `
+                    <div class="gantt-header">
+                        <div style="width: 110px;"></div>
+                        <div class="gantt-col-label">SEM 1</div><div class="gantt-col-label">SEM 2</div>
+                        <div class="gantt-col-label">SEM 3</div><div class="gantt-col-label">SEM 4</div>
+                    </div>`;
+                const data = snapshot.val();
+                for (let id in data) {
+                    const t = data[id];
+                    const row = `
+                        <div class="gantt-row">
+                            <div class="gantt-task-name">${t.nome}</div>
+                            <div class="gantt-bar-area">
+                                <div class="gantt-bar" onclick="openGanttModal('${t.fase}')" 
+                                     style="width: ${t.width}%; left: ${t.left}%; --bar-color: var(--color-${(t.colorIndex)})">
+                                </div>
+                            </div>
+                            ${isAdmin ? `<button class="btn-delete" style="right:-30px" onclick="deleteItem('gantt', '${id}')">X</button>` : ''}
+                        </div>`;
+                    container.insertAdjacentHTML('beforeend', row);
+                }
+                if (isAdmin) {
+                    container.insertAdjacentHTML('beforeend', `<button class="admin-only" style="margin-top:10px" onclick="showAddForm('gantt')">Adicionar Tarefa</button>`);
+                }
             });
         }
 
-        // --- MANTENDO LÓGICA ORIGINAL DE UI ---
-        const cursor = document.getElementById('custom-cursor');
-        const carousel = document.getElementById('carousel');
-        const observer = new IntersectionObserver(entries => {
-            entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('section-visible'); });
-        }, { threshold: 0.1 });
-        document.querySelectorAll('section').forEach(s => observer.observe(s));
+        // --- FUNÇÕES DE EDIÇÃO ---
+        function deleteItem(path, id) {
+            if(confirm('Excluir este item?')) db.ref(`${path}/${id}`).remove();
+            event.stopPropagation();
+        }
 
-        document.addEventListener('mousemove', (e) => {
-            cursor.style.left = e.clientX + 'px';
-            cursor.style.top = e.clientY + 'px';
-        });
-
-        function openModalData(t, d) {
-            document.getElementById('modal-title').innerText = t;
-            document.getElementById('modal-text').innerText = d;
+        function showAddForm(type) {
+            const formArea = document.getElementById('admin-form-area');
+            document.getElementById('modal-title').innerText = "Novo Registro";
+            document.getElementById('modal-text').innerText = "";
+            document.getElementById('modal-cards-container').innerHTML = "";
+            
+            if (type === 'diario') {
+                formArea.innerHTML = `
+                    <input id="f_tit" placeholder="Título">
+                    <input id="f_fase" placeholder="Fase (ex: Fase 01)">
+                    <input id="f_data" placeholder="Data (ex: 20 Mar)">
+                    <textarea id="f_desc" placeholder="Descrição"></textarea>
+                    <button onclick="saveNew('diario')">Salvar</button>
+                `;
+            } else {
+                formArea.innerHTML = `
+                    <input id="g_nome" placeholder="Nome da Tarefa">
+                    <input id="g_width" placeholder="Largura % (0-100)">
+                    <input id="g_left" placeholder="Início % (0-100)">
+                    <input id="g_fase" placeholder="Fase Vinculada">
+                    <input id="g_color" placeholder="Cor (1-5)">
+                    <button onclick="saveNew('gantt')">Salvar</button>
+                `;
+            }
             document.getElementById('modal-overlay').classList.add('active');
         }
-        function closeModal() { document.getElementById('modal-overlay').classList.remove('active'); }
 
-        // Anel 3D e Carrossel (Lógica simplificada para manter performance)
-        let autoScroll = setInterval(() => {
-            if(carousel.scrollWidth > carousel.clientWidth) {
-                carousel.scrollLeft += 1;
-                if(carousel.scrollLeft >= (carousel.scrollWidth - carousel.clientWidth)) carousel.scrollLeft = 0;
+        function saveNew(type) {
+            if (type === 'diario') {
+                const data = {
+                    titulo: document.getElementById('f_tit').value,
+                    fase: document.getElementById('f_fase').value,
+                    data: document.getElementById('f_data').value,
+                    descricao: document.getElementById('f_desc').value,
+                    autor: "Pablo"
+                };
+                db.ref('diario').push(data);
+            } else {
+                const data = {
+                    nome: document.getElementById('g_nome').value,
+                    width: document.getElementById('g_width').value,
+                    left: document.getElementById('g_left').value,
+                    fase: document.getElementById('g_fase').value,
+                    colorIndex: document.getElementById('g_color').value
+                };
+                db.ref('gantt').push(data);
             }
-        }, 30);
+            closeModal();
+        }
 
-        // Gerar Anel (Exemplo com 12 faces para leveza)
-        const ring = document.getElementById('image-ring');
-        for(let i=0; i<12; i++) {
-            const face = document.createElement('div');
-            face.className = 'ring-face';
-            face.style.transform = `rotateY(${i * 30}deg) translateZ(400px)`;
-            face.style.background = `rgba(255,255,255,0.05)`;
-            face.style.border = "1px solid var(--glass-border)";
-            ring.appendChild(face);
+        // --- LÓGICA DE INTERFACE (Mantida do original) ---
+        const cursor = document.getElementById('custom-cursor');
+        const carousel = document.getElementById('carousel');
+        let autoScrollActive = true;
+
+        document.addEventListener('mousemove', (e) => {
+            if (window.innerWidth > 768) {
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+            }
+        });
+
+        function autoScroll() {
+            if (autoScrollActive && carousel.children.length > 3) {
+                carousel.scrollLeft += 0.8; 
+                if (carousel.scrollLeft >= (carousel.scrollWidth - carousel.clientWidth - 1)) carousel.scrollLeft = 0;
+            }
+        }
+        setInterval(autoScroll, 20);
+
+        function openModal(id, type) {
+            if (isAdmin) return; // Se admin quiser editar, o clique no card poderia abrir edição futuramente
+            db.ref(`${type}/${id}`).once('value', snap => {
+                const item = snap.val();
+                document.getElementById('modal-title').innerText = item.titulo || item.nome;
+                document.getElementById('modal-text').innerText = item.descricao || "";
+                document.getElementById('admin-form-area').innerHTML = "";
+                document.getElementById('modal-overlay').classList.add('active');
+            });
+        }
+
+        function closeModal() { document.getElementById('modal-overlay').classList.remove('active'); autoScrollActive = true; }
+
+        // Scripts de animação e Ring 3D permanecem iguais ao seu código original...
+        const observerOptions = { threshold: 0.2 };
+        const sectionObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('section-visible'); });
+        }, observerOptions);
+        document.querySelectorAll('section').forEach(section => sectionObserver.observe(section));
+
+        function createRingWithImages() {
+            const ringContainer = document.getElementById('image-ring');
+            const faces = 36;
+            const radius = window.innerWidth < 768 ? 260 : 500;
+            const faceWidth = window.innerWidth < 768 ? 45 : 88;
+            for (let i = 0; i < faces; i++) {
+                const face = document.createElement('div');
+                face.className = 'ring-face';
+                const angle = i * (360 / faces);
+                face.style.transform = `rotateY(${angle}deg) translateZ(${radius}px)`;
+                face.style.backgroundImage = `url('bannerext')`;
+                face.style.backgroundPosition = `${-i * faceWidth}px center`;
+                ringContainer.appendChild(face);
+            }
+        }
+        createRingWithImages();
+
+        function handleCardClick(card) {
+            const state = card.getAttribute('data-state');
+            document.querySelectorAll('.story-card').forEach(c => c.setAttribute('data-state', 'deck'));
+            if (state === "deck") card.setAttribute('data-state', 'active');
+        }
+        
+        function openMemberModal(nome, desc, imgSrc) {
+            const header = document.getElementById('modal-member-header');
+            header.innerHTML = `<div class="modal-portrait"><img src="${imgSrc}" alt="${nome}"></div>`;
+            document.getElementById('modal-title').innerText = nome;
+            document.getElementById('modal-text').innerText = desc;
+            document.getElementById('modal-overlay').classList.add('active');
         }
     </script>
 </body>
